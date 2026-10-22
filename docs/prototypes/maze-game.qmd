@@ -1,0 +1,172 @@
+---
+title: "Maze Craze — Gamification Layer"
+subtitle: "Browser-Based Speech Therapy Game (Phaser 3)"
+---
+
+## Overview
+
+**Maze Craze** is the gamification layer of the rehabilitation platform. It wraps speech therapy exercises inside an engaging, browser-based maze game built with **Phaser 3** — a professional HTML5 game framework.
+
+Children navigate a maze character to collect coins and reach the goal. The game is designed as a **reward wrapper** around therapy sessions — correct pronunciation unlocks movement or rewards, creating positive reinforcement loops.
+
+Two versions exist: **v1** (classic grid maze) and **v2** (enhanced with assets and improved UI).
+
+---
+
+## Gamification Rationale
+
+::: {.callout-note}
+## Why Games?
+Research in pediatric speech therapy consistently shows that **intrinsic motivation** dramatically improves therapy adherence and generalization. Children who play while practicing show **2-3x higher session engagement** compared to drill-based approaches.
+:::
+
+Key design principles:
+- **Immediate feedback** — visual/audio rewards on correct production
+- **Progressive difficulty** — maze complexity increases with performance
+- **Character selection** — agency and personalization increase buy-in
+- **Zero reading required** — icon-based UI accessible to preliterate children
+
+---
+
+## Technology Stack
+
+| Layer | Technology |
+|---|---|
+| Game Engine | Phaser 3.55.2 |
+| Language | JavaScript (ES6+) |
+| Rendering | WebGL / Canvas |
+| Delivery | Browser (no install needed) |
+
+---
+
+## Maze Grid Architecture (v1)
+
+The maze is defined as a 2D integer matrix:
+
+```javascript
+// Tile encoding:
+// 0 = walkable path
+// 1 = wall
+// 2 = collectible coin
+// 3 = goal tile
+
+const mazeGrid = [
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 1, 0, 0, 0, 0, 2, 2, 1],
+    [1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1],
+    [1, 2, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+    [1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
+    [1, 0, 0, 2, 0, 1, 0, 0, 0, 1, 0, 1],
+    [1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1],
+    [1, 2, 0, 1, 0, 0, 0, 1, 2, 0, 3, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+];
+
+const TILE_SIZE = 40; // pixels per tile
+```
+
+---
+
+## Scene Architecture (Phaser 3)
+
+The game uses Phaser's **Scene Manager** to separate concerns:
+
+```{mermaid}
+stateDiagram-v2
+    [*] --> CharacterSelectScene
+    CharacterSelectScene --> GameScene : Player selects character
+    GameScene --> GameScene : Navigate maze, collect coins
+    GameScene --> GameOverScene : Reach goal tile (3)
+    GameOverScene --> CharacterSelectScene : Restart
+```
+
+---
+
+## Core Game Logic
+
+```javascript
+// --- Character Selection Scene ---
+class CharacterSelectScene extends Phaser.Scene {
+    constructor() { super('CharacterSelectScene'); }
+
+    preload() {
+        // Generate colored square sprites procedurally (no external assets needed)
+        this.createSquareTexture('hero_blue',  0x3498db);
+        this.createSquareTexture('hero_red',   0xe74c3c);
+        this.createSquareTexture('hero_green', 0x2ecc71);
+    }
+
+    create() {
+        const options = ['hero_blue', 'hero_red', 'hero_green'];
+        const names   = ['Aqua Knight', 'Crimson Rogue', 'Jade Ranger'];
+        this.selectedKey = 'hero_blue';
+
+        options.forEach((key, index) => {
+            const xPos = 120 + (index * 120);
+            const char = this.add.sprite(xPos, 200, key)
+                             .setInteractive()
+                             .setScale(1.5);
+
+            char.on('pointerdown', () => {
+                this.selectedKey = key;
+                // Update selection indicator
+            });
+        });
+
+        // Start button launches GameScene with selected character
+        this.add.rectangle(240, 320, 220, 50, 0x27ae60)
+            .setInteractive()
+            .on('pointerdown', () => {
+                this.scene.start('GameScene', { heroKey: this.selectedKey });
+            });
+    }
+}
+```
+
+---
+
+## HTML Entry Point
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maze Craze</title>
+    <!-- Phaser 3 via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
+</head>
+<body>
+    <div id="game-container"></div>
+    <script src="game.js"></script>
+</body>
+</html>
+```
+
+---
+
+## Running the Game
+
+No server or installation required.
+
+```bash
+# Simply open in any modern browser
+start games/Maze Craze v2/index.html
+```
+
+Or double-click `index.html` in Windows Explorer.
+
+::: {.callout-tip}
+## Integration Tip
+To connect Maze Craze with the speech modules, add a `WebSocket` listener in `game.js` that receives a **"correct"** signal from the Python backend (Gradio + WebSocket), then triggers the player's movement reward animation.
+:::
+
+---
+
+## Game Versions
+
+| Version | Features |
+|---|---|
+| **v1** | Procedural textures, character selection, basic maze grid |
+| **v2** | Sprite assets, improved animations, polished UI |

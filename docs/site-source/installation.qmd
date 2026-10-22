@@ -1,0 +1,201 @@
+---
+title: "Installation & Setup"
+subtitle: "Environment Setup for the AI Arabic Speech Rehabilitation Platform"
+---
+
+## Requirements
+
+::: {.callout-note}
+A **CUDA-capable GPU** is strongly recommended for real-time inference. All modules fall back gracefully to CPU, but response times will increase significantly.
+:::
+
+| Requirement | Version |
+|---|---|
+| Python | 3.10+ |
+| CUDA Toolkit | 11.8+ (optional, for GPU) |
+| Conda | Latest |
+| Git | Latest |
+| FFmpeg | Latest |
+| RAM | 8 GB minimum, 16 GB recommended |
+| VRAM | 4 GB+ (for Whisper + MediaPipe concurrent) |
+
+---
+
+## Step 1 — Create the Conda Environment
+
+```bash
+conda create --name speech_therapy python=3.10 -y
+conda activate speech_therapy
+```
+
+---
+
+## Step 2 — Install FFmpeg
+
+FFmpeg is required by Whisper for audio decoding.
+
+::: {.panel-tabset}
+
+### Windows (Conda)
+```bash
+conda install -c conda-forge ffmpeg -y
+```
+
+### Linux / WSL
+```bash
+sudo apt update && sudo apt install ffmpeg -y
+```
+
+### macOS
+```bash
+brew install ffmpeg
+```
+
+:::
+
+---
+
+## Step 3 — Install Python Dependencies
+
+```bash
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+pip install openai-whisper
+pip install mediapipe
+pip install opencv-python
+pip install gradio
+pip install transformers accelerate
+pip install soundfile
+pip install numpy
+```
+
+::: {.callout-tip}
+## CPU-Only Installation
+If you do not have a GPU, replace the PyTorch install command with:
+```bash
+pip install torch torchvision torchaudio
+```
+:::
+
+---
+
+## Step 4 — Install Habibi-TTS
+
+The TTS module uses **Habibi-TTS**, a dialect-aware Arabic speech synthesis engine.
+
+```bash
+# Clone the Habibi-TTS repository inside the project folder
+git clone https://github.com/Habibi-TTS/Habibi-TTS-main
+
+# Install its dependencies
+cd Habibi-TTS-main
+pip install -r requirements.txt
+cd ..
+```
+
+---
+
+## Step 5 — Download AI Models
+
+Each model must be downloaded separately. Run the download scripts from the project root:
+
+```bash
+# Download OpenAI Whisper (base model — Arabic optimized)
+python whisper_download.py
+
+# Download Qwen Text Generation Model (for Story Generator)
+python qwen_model_download.py
+
+# Download Qwen3-ASR Model (for Advanced STT)
+python Download_the_TextGeneration_Model.py
+
+# Download additional assets (fonts, etc.)
+python download_assets.py
+```
+
+::: {.callout-warning}
+## Disk Space
+Model downloads require approximately **5–10 GB** of disk space total.  
+Ensure your drive has sufficient free space before running download scripts.
+:::
+
+---
+
+## Step 6 — Download MediaPipe Face Landmarker
+
+The Lip Vision module requires the MediaPipe face landmark task file.
+
+```bash
+python Amiri_font_download.py
+```
+
+Or download manually:
+```bash
+wget -O face_landmarker.task https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task
+```
+
+---
+
+## Step 7 — Verify the Environment
+
+Run this quick check to confirm all key dependencies are loaded:
+
+```python
+import torch
+import whisper
+import mediapipe
+import cv2
+import gradio
+import transformers
+
+print(f"PyTorch:      {torch.__version__}")
+print(f"CUDA:         {torch.cuda.is_available()}")
+print(f"OpenCV:       {cv2.__version__}")
+print(f"Gradio:       {gradio.__version__}")
+print(f"Transformers: {transformers.__version__}")
+print("All dependencies OK!")
+```
+
+---
+
+## Project Folder Structure
+
+After setup, your project directory should look like this:
+
+```
+Communication Disorders/
+├── lips_prototype.py          # Saif — Lip Apraxia Vision
+├── speech_prototype.py        # Layla — Whisper STT
+├── tts_prototype.py           # Habibi TTS
+├── multimodal_prototype.py    # Combined Multimodal System
+├── Story_Generator.py         # Arabic Story Generator
+├── merged_prototype.py        # Merged Story + Vision
+├── Qwen3-ASR.py               # Advanced Qwen ASR
+├── face_landmarker.task       # MediaPipe model asset
+├── whisper_models/            # Downloaded Whisper weights
+├── qwen_model/                # Qwen3-ASR model weights
+├── qwen_text_model/           # Qwen text model weights
+├── kokoro_cached_model/       # Cached TTS model
+├── Habibi-TTS-main/           # TTS engine source
+├── fonts/                     # Amiri Arabic font
+├── games/
+│   ├── Maze Craze v1/
+│   └── Maze Craze v2/
+├── whisper_download.py
+├── qwen_model_download.py
+├── download_assets.py
+└── py_env.md
+```
+
+---
+
+## Running Each Module
+
+| Module | Command |
+|---|---|
+| Lip Apraxia Vision (Saif) | `python lips_prototype.py` |
+| Speech-to-Text (Layla) | `python speech_prototype.py` |
+| Arabic TTS | `python tts_prototype.py` |
+| Multimodal System | `python multimodal_prototype.py` |
+| Story Generator | `python Story_Generator.py` |
+| Advanced ASR (Qwen3) | `python Qwen3-ASR.py` |
+| Maze Game | Open `games/Maze Craze v2/index.html` in browser |

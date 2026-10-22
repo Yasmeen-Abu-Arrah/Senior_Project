@@ -1,0 +1,175 @@
+---
+title: "Saif Module — Lip Apraxia Vision"
+subtitle: "Real-Time Computer Vision for Articulatory Assessment"
+---
+
+## Overview
+
+The **Saif Module** is the computer vision core of the platform. It targets children diagnosed with **Childhood Apraxia of Speech (CAS)** — a neurological disorder where the brain struggles to plan and coordinate the precise oral movements needed for speech.
+
+The module uses **MediaPipe Face Mesh** to extract 3D facial landmarks from a live webcam feed and continuously evaluates the child's lip geometry against clinical articulatory targets.
+
+---
+
+## Clinical Foundation — The Digital DTTC Protocol
+
+The module implements a software adaptation of the **Dynamic Temporal and Tactile Cueing (DTTC)** protocol, a gold-standard clinical technique for treating CAS. The core metric is the **Lip Pucker Ratio (LPR)**:
+
+$$
+\text{LPR} = \frac{d_{\text{horizontal}}}{d_{\text{vertical}} + \epsilon}
+$$
+
+Where:
+
+- $d_{\text{horizontal}}$ = pixel distance between left and right lip corners (landmarks 61 → 291)
+- $d_{\text{vertical}}$ = pixel distance between upper and lower lip midpoints (landmarks 13 → 14)
+- $\epsilon = 0.001$ — prevents division by zero
+
+### LPR Decision Logic
+
+| LPR Condition | Clinical State | Feedback |
+|---|---|---|
+| $d_v \leq 12$ px | Mouth fully closed | ✅ Letter B / M — Correct |
+| $\text{LPR} < 1.8$ | Rounded pucker | ✅ Letter O / W — Correct |
+| $d_v > 35$ px | Mouth fully open | ✅ Letter A — Correct |
+| Otherwise | Incorrect motor plan | ❌ Retry! |
+
+---
+
+## Landmark Mapping
+
+```{python}
+#| code-fold: false
+#| eval: false
+
+# MediaPipe Face Mesh — Lip Landmark IDs
+LIP_TOP    = 13   # Upper lip midpoint
+LIP_BOTTOM = 14   # Lower lip midpoint
+LIP_LEFT   = 61   # Left lip corner
+LIP_RIGHT  = 291  # Right lip corner
+```
+
+---
+
+## Full Source Code
+
+```{python}
+#| code-fold: true
+#| eval: false
+#| filename: "lips_prototype.py"
+
+import cv2
+import mediapipe as mp
+import math
+
+# Initialize MediaPipe Face Mesh
+mp_face_mesh = mp.solutions.face_mesh
+face_mesh = mp_face_mesh.FaceMesh(
+    max_num_faces=1,
+    refine_landmarks=True,
+    min_detection_confidence=0.5,
+    min_tracking_confidence=0.5
+)
+
+# Standard Mouth Landmark IDs
+LIP_TOP    = 13
+LIP_BOTTOM = 14
+LIP_LEFT   = 61
+LIP_RIGHT  = 291
+
+# Start Webcam
+cap = cv2.VideoCapture(0)
+print("Webcam started. Press [ESC] or [Q] to close.")
+
+while cap.isOpened():
+    success, frame = cap.read()
+    if not success:
+        continue
+
+    # Mirror the frame naturally for the child
+    frame = cv2.flip(frame, 1)
+    h, w, _ = frame.shape
+
+    rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    results = face_mesh.process(rgb_frame)
+
+    status_text = "Status: Waiting for action..."
+    color = (255, 255, 255)
+
+    if results.multi_face_landmarks:
+        for face_landmarks in results.multi_face_landmarks:
+
+            # Extract landmark coordinates
+            pt_top    = face_landmarks.landmark[LIP_TOP]
+            pt_bottom = face_landmarks.landmark[LIP_BOTTOM]
+            pt_left   = face_landmarks.landmark[LIP_LEFT]
+            pt_right  = face_landmarks.landmark[LIP_RIGHT]
+
+            # Convert normalized values to pixel coordinates
+            y_top,    x_top    = int(pt_top.y * h),    int(pt_top.x * w)
+            y_bottom, x_bottom = int(pt_bottom.y * h), int(pt_bottom.x * w)
+            y_left,   x_left   = int(pt_left.y * h),   int(pt_left.x * w)
+            y_right,  x_right  = int(pt_right.y * h),  int(pt_right.x * w)
+
+            # Geometric calculations for Apraxia tracking
+            vertical_dist   = math.sqrt((x_top - x_bottom)**2 + (y_top - y_bottom)**2)
+            horizontal_dist = math.sqrt((x_left - x_right)**2 + (y_left - y_right)**2)
+            lip_ratio       = horizontal_dist / (vertical_dist + 0.001)
+
+            # Clinical Evaluation
+            if vertical_dist <= 12:
+                status_text = "GOAL - CLOSED: MOUTH CLOSED (Letter: B / M)"
+                color = (0, 255, 0)
+            elif lip_ratio < 1.8:
+                status_text = "GOAL - ROUNDED: LIPS ROUNDED (Letter: O / W)"
+                color = (0, 255, 0)
+            elif vertical_dist > 35:
+                status_text = "GOAL - OPEN: MOUTH OPEN (Letter: A)"
+                color = (0, 255, 0)
+            else:
+                status_text = "ALERT: Incorrect Planning - Retry!"
+                color = (0, 0, 255)
+
+            # Draw augmented overlay on the child's mouth
+            for (x, y) in [(x_top, y_top), (x_bottom, y_bottom),
+                           (x_left, y_left), (x_right, y_right)]:
+                cv2.circle(frame, (x, y), 4, color, -1)
+            cv2.line(frame, (x_top, y_top), (x_bottom, y_bottom), (255, 0, 0), 1)
+            cv2.line(frame, (x_left, y_left), (x_right, y_right), (255, 0, 0), 1)
+
+    cv2.putText(frame, status_text, (20, 40),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2, cv2.LINE_AA)
+    cv2.imshow('Smart Speech Therapy - AI Camera Unit', frame)
+
+    if cv2.waitKey(1) & 0xFF in [27, ord('q')]:
+        break
+
+cap.release()
+cv2.destroyAllWindows()
+```
+
+---
+
+## Running the Module
+
+```bash
+conda activate speech_therapy
+python lips_prototype.py
+```
+
+::: {.callout-tip}
+## Webcam Tips
+- Ensure the child's face is **well-lit from the front** — avoid strong backlighting.
+- Position the camera at **eye level**, 40–70 cm from the child's face.
+- The module renders a mirrored view so children can self-monitor naturally.
+:::
+
+---
+
+## Key Dependencies
+
+| Package | Purpose |
+|---|---|
+| `mediapipe` | 3D face landmark extraction |
+| `opencv-python` | Webcam capture and frame rendering |
+| `math` | Euclidean distance / LPR calculation |

@@ -1,0 +1,194 @@
+---
+title: "Qwen3 ASR — Advanced Speech Recognition"
+subtitle: "Word-Level Timestamped Arabic Transcription"
+---
+
+## Overview
+
+The **Qwen3 ASR Module** is an advanced speech-to-text engine that goes beyond basic transcription. It uses the **Qwen3-ASR model** running fully offline to produce:
+
+- **High-accuracy Arabic transcription** 
+- **Word-level timestamps** — exact start/end time for each spoken word
+- **Bilingual support** — Arabic and English in a single interface
+
+Word-level timestamps are clinically significant: they allow therapists to identify **hesitations**, **prolongations**, and **phoneme insertion points** — patterns critical for stuttering and fluency disorder assessment.
+
+---
+
+## Clinical Significance of Word-Level Timestamps
+
+| Metric | Clinical Indicator |
+|---|---|
+| Long gap before a word | Hesitation / word-finding difficulty |
+| Short burst of multiple words | Rapid/rushed fluency pattern |
+| Extended word duration | Phoneme prolongation (stuttering) |
+| Missing word boundary | Phoneme deletion or coarticulation error |
+
+---
+
+## System Architecture
+
+```{mermaid}
+flowchart LR
+    A[Audio Input\nMic or File] --> B[Qwen3-ASR\nLocal Model]
+    B --> C[Transcription\nFull Text]
+    B --> D[Word Objects\nwith Timestamps]
+    C --> E[Text Output Tab]
+    D --> F[Timeline Output Tab\n⏱️ word start-end]
+    E --> G[Gradio Blocks UI]
+    F --> G
+```
+
+---
+
+## Full Source Code
+
+```{python}
+#| code-fold: true
+#| eval: false
+#| filename: "Qwen3-ASR.py"
+
+import os
+import gradio as gr
+from qwen_asr import Qwen3ASRModel
+import torch
+
+LOCAL_MODEL_PATH = "./qwen_model"
+
+if not os.path.exists(LOCAL_MODEL_PATH) or not os.listdir(LOCAL_MODEL_PATH):
+    raise FileNotFoundError(
+        "Local model folder is empty! Please run the download script first."
+    )
+
+print("Loading Qwen3-ASR model from local folder...")
+device      = "cuda:0" if torch.cuda.is_available() else "cpu"
+torch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32
+
+model = Qwen3ASRModel.from_pretrained(
+    LOCAL_MODEL_PATH,
+    dtype=torch_dtype,
+    device_map=device,
+    trust_remote_code=True
+)
+print(f"Model loaded on {device.upper()}!")
+
+
+def format_timestamps(results) -> tuple[str, str]:
+    """Parse Qwen3 ASR output into text + word-level timeline."""
+    if isinstance(results, list) and len(results) > 0:
+        results = results[0]
+
+    text_out = getattr(results, "text", "")
+    time_out = ""
+
+    if hasattr(results, "words") and results.words:
+        lines = []
+        for w in results.words:
+            word  = getattr(w, "word",  "")
+            start = getattr(w, "start", 0.0)
+            end   = getattr(w, "end",   0.0)
+            lines.append(f"⏱️ [{start:05.2f}s → {end:05.2f}s] : {word}")
+        time_out = "\n".join(lines)
+    else:
+        time_out = "No timestamps returned. Ensure clean audio input."
+
+    return text_out, time_out
+
+
+def process_audio(audio_source, mic_file, uploaded_file, language) -> tuple[str, str]:
+    """Route audio from microphone or file upload to the ASR model."""
+    active_file = mic_file if audio_source == "Microphone" else uploaded_file
+
+    if not active_file:
+        return "❌ No audio provided.", "Please record or upload audio first."
+
+    try:
+        lang_tag = "Arabic" if language == "Arabic" else "English"
+        results  = model.transcribe(audio=active_file, language=lang_tag)
+        return format_timestamps(results)
+
+    except Exception as e:
+        return "❌ Error.", f"Exception: {str(e)}"
+
+
+# Gradio Interface
+with gr.Blocks(title="Qwen3 Advanced ASR — Offline") as demo:
+    gr.Markdown("# 🔬 Qwen3 ASR — Word-Level Timestamped Transcription")
+    gr.Markdown(
+        "Advanced offline speech recognition with word-level timestamps. "
+        "Supports **Arabic** and **English** audio input."
+    )
+
+    with gr.Row():
+        source_toggle = gr.Radio(
+            choices=["Microphone", "File Upload"],
+            value="Microphone",
+            label="Audio Source"
+        )
+        language_selector = gr.Dropdown(
+            choices=["Arabic", "English"],
+            value="Arabic",
+            label="Language"
+        )
+
+    with gr.Row():
+        mic_input  = gr.Audio(sources=["microphone"], type="filepath", label="Microphone")
+        file_input = gr.Audio(sources=["upload"],     type="filepath", label="Upload Audio")
+
+    analyze_btn = gr.Button("Analyze Speech 🔬", variant="primary")
+
+    with gr.Row():
+        text_output = gr.Textbox(label="Full Transcription",        lines=4)
+        time_output = gr.Textbox(label="Word-Level Timeline",       lines=10)
+
+    analyze_btn.click(
+        fn=process_audio,
+        inputs=[source_toggle, mic_input, file_input, language_selector],
+        outputs=[text_output, time_output]
+    )
+
+if __name__ == "__main__":
+    demo.launch(share=True)
+```
+
+---
+
+## Running the Module
+
+```bash
+conda activate speech_therapy
+python Qwen3-ASR.py
+```
+
+---
+
+## Sample Output
+
+**Input audio:** Child saying "قِطَارٌ كَبيرٌ" (Large train)
+
+**Full Transcription:**
+```
+قطار كبير
+```
+
+**Word-Level Timeline:**
+```
+⏱️ [00.00s → 00.42s] : قطار
+⏱️ [00.55s → 00.91s] : كبير
+```
+
+::: {.callout-tip}
+## Clinical Insight
+The gap between `00.42s` and `00.55s` (130ms) is clinically normal.  
+Gaps exceeding **250ms** between consecutive words may indicate **word-finding hesitation** or **motor planning delays** consistent with apraxia.
+:::
+
+---
+
+## Key Dependencies
+
+| Package | Purpose |
+|---|---|
+| `qwen_asr` | Qwen3-ASR model and inference engine |
+| `torch` | GPU inference |
+| `gradio` | Web interface |

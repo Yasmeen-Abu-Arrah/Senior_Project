@@ -1,0 +1,142 @@
+---
+title: "Habibi TTS — Arabic Speech Synthesis"
+subtitle: "Dialect-Aware Arabic Text-to-Speech Engine"
+---
+
+## Overview
+
+The **Habibi TTS Module** provides **dialect-aware Arabic speech synthesis** using the [Habibi-TTS](https://github.com/Habibi-TTS) engine. It converts Arabic text into natural, fluent speech across five major Arabic dialects, enabling the platform to:
+
+- **Model correct pronunciation** for the child to imitate (auditory cueing)
+- **Generate personalized audio feedback** in the child's native dialect
+- **Narrate therapy stories** produced by the Story Generator module
+
+---
+
+## Supported Dialects
+
+| Code | Dialect | Region |
+|---|---|---|
+| `MSA` | Modern Standard Arabic | Formal / Pan-Arab |
+| `LEV` | Levantine | Palestine, Syria, Lebanon, Jordan |
+| `EGY` | Egyptian | Egypt |
+| `SAU` | Saudi | Saudi Arabia / Gulf |
+| `UAE` | Emirati | UAE |
+
+::: {.callout-note}
+The **Levantine (`LEV`)** dialect is the primary clinical target for this project, matching the phonological profile of Palestinian children.
+:::
+
+---
+
+## System Architecture
+
+```{mermaid}
+flowchart LR
+    A[Arabic Text Input] --> B[Dialect Selector]
+    B --> C[HabibiTTS Engine\nUnified Model]
+    C --> D[PyTorch Inference\nGPU / CPU]
+    D --> E[WAV Audio Output]
+    E --> F[Gradio Player]
+```
+
+---
+
+## Full Source Code
+
+```{python}
+#| code-fold: true
+#| eval: false
+#| filename: "tts_prototype.py"
+
+import os
+import soundfile as sf
+import gradio as gr
+import torch
+from habibi_tts.infer.utils_infer import HabibiTTS
+
+REPO_ROOT = os.path.dirname(os.path.realpath(__file__))
+device = "cuda" if torch.cuda.is_available() else "cpu"
+
+# Load the unified multi-dialect TTS engine
+tts_engine = HabibiTTS(model_type="Unified", device=device)
+
+
+def generate_arabic_speech(text, dialect):
+    """Convert Arabic text to speech using the selected dialect."""
+    if not text.strip():
+        return None
+
+    out_path = os.path.join(REPO_ROOT, "output.wav")
+
+    # Run inference
+    audio, sr = tts_engine.infer(gen_text=text, dialect=dialect)
+
+    # Convert tensor to numpy array if needed
+    if isinstance(audio, torch.Tensor):
+        audio = audio.cpu().numpy()
+
+    # Save to WAV file
+    sf.write(out_path, audio, sr)
+    return out_path
+
+
+# Build the Gradio interface
+with gr.Blocks(title="Habibi-TTS Arabic Speech Synthesis") as demo:
+    gr.Markdown("# 🔊 Habibi-TTS — Dialect-Aware Arabic Speech")
+    gr.Markdown("Enter Arabic text and select a dialect to synthesize natural speech.")
+
+    with gr.Row():
+        text_input = gr.Textbox(
+            label="Arabic Text",
+            lines=5,
+            placeholder="أدخل النص العربي هنا..."
+        )
+        dialect_input = gr.Dropdown(
+            choices=["MSA", "EGY", "LEV", "SAU", "UAE"],
+            value="LEV",
+            label="Dialect"
+        )
+
+    with gr.Row():
+        audio_output = gr.Audio(label="Generated Speech", type="filepath")
+
+    btn = gr.Button("Generate Speech 🎙️", variant="primary")
+    btn.click(generate_arabic_speech, [text_input, dialect_input], audio_output)
+
+
+if __name__ == "__main__":
+    demo.launch(share=True)
+```
+
+---
+
+## Running the Module
+
+```bash
+conda activate speech_therapy
+python tts_prototype.py
+```
+
+Then open the Gradio URL, type Arabic text, select a dialect, and click **Generate Speech**.
+
+---
+
+## Usage Example
+
+| Input Text | Dialect | Output |
+|---|---|---|
+| `قطار` | LEV | Audio pronunciation of "قطار" in Levantine dialect |
+| `مرحبا، كيف حالك؟` | EGY | Egyptian Arabic greeting audio |
+| `أهلاً وسهلاً` | MSA | Formal MSA welcome phrase |
+
+---
+
+## Key Dependencies
+
+| Package | Purpose |
+|---|---|
+| `habibi_tts` | Dialect-aware Arabic TTS engine |
+| `soundfile` | WAV audio file writing |
+| `torch` | GPU inference |
+| `gradio` | Web interface |

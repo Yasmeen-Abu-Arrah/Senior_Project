@@ -1,0 +1,210 @@
+---
+title: "Story Generator — Arabic Therapy Stories"
+subtitle: "Offline LLM-Powered Story Generation for Speech Practice"
+---
+
+## Overview
+
+The **Story Generator** uses a locally-hosted **Qwen 2.5** language model to generate **child-safe, fully vocalized Arabic stories** that embed target therapy words. It enables therapists and parents to create personalized, engaging reading materials specifically tuned to a child's current speech therapy targets.
+
+All inference is **100% offline** — no internet connection is required after the initial model download.
+
+---
+
+## Clinical Purpose
+
+Story-based therapy is a research-backed technique for generalizing speech production gains. By embedding target words in a narrative context:
+
+- Children encounter the phoneme in **natural, meaningful contexts**
+- Repeated exposure across the story reinforces **motor pattern consolidation**
+- The **vocalization (tashkeel / حركات)** makes the text readable for young learners
+- Stories follow **everyday themes** familiar to Palestinian children
+
+---
+
+## System Architecture
+
+```{mermaid}
+flowchart LR
+    A[Therapist Inputs\nTarget Words + Theme] --> B[System Prompt\nBuilder]
+    B --> C[Qwen 2.5\nLocal LLM\nOffline]
+    C --> D[Generated Story\nFully Vocalized Arabic]
+    D --> E[Gradio Text Output]
+```
+
+---
+
+## Story Generation Pipeline
+
+### System Prompt Engineering
+
+The LLM is constrained by a carefully engineered Arabic system prompt that enforces:
+
+1. **Simplified vocabulary** — age-appropriate for children 3–7
+2. **Full vocalization (tashkeel)** — critical for correct Arabic reading
+3. **Target word embedding** — wrapped in parentheses `(قطار)` for visibility
+4. **Cultural safety** — no religious, violent, or adult content
+5. **Everyday themes** — playground, school morning, colored blocks
+
+---
+
+## Full Source Code
+
+```{python}
+#| code-fold: true
+#| eval: false
+#| filename: "Story_Generator.py"
+
+import os
+import gradio as gr
+from transformers import AutoModelForCausalLM, AutoTokenizer
+import torch
+
+LOCAL_MODEL_PATH = "./qwen_text_model"
+
+if not os.path.exists(LOCAL_MODEL_PATH) or not os.listdir(LOCAL_MODEL_PATH):
+    raise FileNotFoundError(
+        "Local text model folder is empty! Run the download script first."
+    )
+
+print("Loading Qwen Text Model offline...")
+device      = "cuda" if torch.cuda.is_available() else "cpu"
+torch_dtype = torch.float16 if device == "cuda" else torch.float32
+
+tokenizer = AutoTokenizer.from_pretrained(LOCAL_MODEL_PATH)
+model     = AutoModelForCausalLM.from_pretrained(
+    LOCAL_MODEL_PATH,
+    torch_dtype=torch_dtype,
+    device_map=device
+)
+print(f"Story Generator loaded on {device.upper()}!")
+
+
+def generate_safe_story(target_words: str, story_theme: str) -> str:
+    if not target_words.strip():
+        return "Please enter target words first."
+
+    system_prompt = (
+        "أنت كاتب محترف لقصص الأطفال الصغار جداً، وتكتب باللغة العربية الفصحى المبسطة "
+        "والمشكولة بالكامل (بالحركات).\n"
+        "مهمتك: كتابة قصة قصيرة جداً، بسيطة، تدور حول أحداث يومية عادية يفهمها الطفل الصغير.\n"
+        "شروط صارمة:\n"
+        "1. تجنب المفاهيم الأخلاقية أو الدينية أو الفلسفية العميقة.\n"
+        "2. لا محتوى للبالغين أو عنف أو أفكار مخيفة.\n"
+        "3. ادمج الكلمات المستهدفة بشكل متكرر وطبيعي داخل السرد.\n"
+        "4. ضع الكلمات المستهدفة بين قوسين مثل: (عصفور)، (قطار) في كل مرة تظهر."
+    )
+
+    user_prompt = (
+        f"السياق العام للقصة: {story_theme}\n"
+        f"الكلمات المستهدفة (ضعها بين قوسين وكررها): {target_words}"
+    )
+
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user",   "content": user_prompt}
+    ]
+
+    text = tokenizer.apply_chat_template(
+        messages,
+        tokenize=False,
+        add_generation_prompt=True
+    )
+
+    model_inputs = tokenizer([text], return_tensors="pt").to(device)
+
+    with torch.no_grad():
+        generated_ids = model.generate(
+            **model_inputs,
+            max_new_tokens=800,
+            temperature=0.6,  # Low temperature = strict, predictable output
+            top_p=0.9
+        )
+
+    generated_ids = [
+        output_ids[len(input_ids):]
+        for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
+    ]
+
+    return tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
+
+
+# Gradio Interface
+with gr.Blocks(title="Arabic Children's Story Generator (Offline)") as demo:
+    gr.Markdown("# 📚 Arabic Therapy Story Generator — Offline")
+    gr.Markdown(
+        "Generates simple, vocalized Arabic stories for children, "
+        "with therapy target words embedded and highlighted."
+    )
+
+    with gr.Row():
+        with gr.Column():
+            gr.Markdown("### Story Settings")
+            words_input = gr.Textbox(
+                label="Target Words (comma-separated)",
+                placeholder="e.g.: عصفور، قطار",
+                lines=2
+            )
+            theme_input = gr.Dropdown(
+                choices=[
+                    "يوم جميل وممتع في الحديقة العامة",
+                    "اللعب بالألعاب الجميلة في غرفتي",
+                    "ذهاب الطفل إلى المدرسة صباحاً ومشاهدة الطريق",
+                    "مساعدة الأم في ترتيب المكعبات الملونة"
+                ],
+                value="يوم جميل وممتع في الحديقة العامة",
+                label="Story Theme"
+            )
+            generate_btn = gr.Button("Generate Story", variant="primary")
+
+        with gr.Column():
+            gr.Markdown("### Generated Story")
+            story_output = gr.Textbox(
+                label="Vocalized Arabic Story",
+                lines=15,
+                placeholder="Story will appear here..."
+            )
+
+    generate_btn.click(
+        fn=generate_safe_story,
+        inputs=[words_input, theme_input],
+        outputs=story_output
+    )
+
+if __name__ == "__main__":
+    demo.launch()
+```
+
+---
+
+## Running the Module
+
+```bash
+conda activate speech_therapy
+python Story_Generator.py
+```
+
+---
+
+## Story Output Example
+
+**Input:** Target words: `قطار، عصفور` | Theme: يوم في الحديقة
+
+**Output (excerpt):**
+> كانَ (الْعُصْفُورُ) الصَّغيرُ يَجْلِسُ عَلى غُصْنٍ قَريبٍ مِنَ السِّكَّةِ،  
+> وَفَجْأةً سَمِعَ صَوْتَ الـ(قِطَارِ) يَقْتَرِبُ بِسُرْعةٍ...
+
+::: {.callout-tip}
+## Therapist Usage Tip
+After generating a story, combine it with the **Habibi TTS module** to produce an audio reading of the story — giving the child both visual (text) and auditory (speech model) input.
+:::
+
+---
+
+## Key Dependencies
+
+| Package | Purpose |
+|---|---|
+| `transformers` | Load and run Qwen LLM locally |
+| `torch` | GPU/CPU inference |
+| `gradio` | Web interface |

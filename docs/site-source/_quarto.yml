@@ -1,0 +1,87 @@
+project:
+  type: website
+  output-dir: docs
+  render:
+    - "index.qmd"
+    - "installation.qmd"
+    - "prototypes/*.qmd"
+    - "code/*.qmd"
+
+website:
+  title: "AI Arabic Speech Rehabilitation"
+  description: "AI-Driven Rehabilitation System for Arabic Pediatric Communication Disorders — Senior Graduation Project, Arab American University (AAUP)"
+  favicon: assets/favicon.ico
+
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: installation.qmd
+        text: Installation
+      - text: Prototypes
+        menu:
+          - text: "Saif — Lip Apraxia Vision"
+            href: prototypes/lips-module.qmd
+          - text: "Layla — Speech-to-Text (Whisper)"
+            href: prototypes/speech-module.qmd
+          - text: "Habibi TTS — Arabic Speech Synthesis"
+            href: prototypes/tts-module.qmd
+          - text: "Multimodal System"
+            href: prototypes/multimodal.qmd
+          - text: "Story Generator (Qwen)"
+            href: prototypes/story-generator.qmd
+          - text: "Qwen3 ASR"
+            href: prototypes/qwen-asr.qmd
+          - text: "Maze Craze Game"
+            href: prototypes/maze-game.qmd
+    right:
+      - icon: github
+        href: https://github.com
+
+  sidebar:
+    style: "docked"
+    search: true
+    contents:
+      - section: "Getting Started"
+        contents:
+          - index.qmd
+          - installation.qmd
+      - section: "Prototypes"
+        contents:
+          - text: "Saif — Lip Apraxia Vision"
+            href: prototypes/lips-module.qmd
+          - text: "Layla — Speech-to-Text"
+            href: prototypes/speech-module.qmd
+          - text: "Habibi TTS"
+            href: prototypes/tts-module.qmd
+          - text: "Multimodal System"
+            href: prototypes/multimodal.qmd
+          - text: "Story Generator"
+            href: prototypes/story-generator.qmd
+          - text: "Qwen3 ASR"
+            href: prototypes/qwen-asr.qmd
+          - text: "Maze Craze Game"
+            href: prototypes/maze-game.qmd
+      - section: "Source Code"
+        contents:
+          - text: "All Source Files"
+            href: code/index.qmd
+
+  page-footer:
+    left: "Arab American University (AAUP) — Senior Project 2025"
+    right:
+      - icon: github
+        href: https://github.com
+
+format:
+  html:
+    theme:
+      light: flatly
+      dark: darkly
+    css: styles.css
+    toc: true
+    toc-depth: 3
+    code-fold: true
+    code-tools: true
+    code-copy: true
+    highlight-style: github

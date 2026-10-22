@@ -1,0 +1,48 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Runtime data
+.gradio/
+.cache/
+outputs/
+/temp_story/
+/data/
+/archive/generated-media/
+**/output.wav
+
+# Downloaded assets (run scripts/download_models.py)
+/models/*
+!/models/.gitkeep
+!/models/README.md
+/assets/fonts/*
+!/assets/fonts/.gitkeep
+
+# Model weights and large binaries
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.onnx
+*.h5
+*.msgpack
+*.gguf
+*.ckpt
+*.task
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Local environment
+.env
+.env.*

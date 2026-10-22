@@ -1,0 +1,136 @@
+---
+title: "AI-Driven Arabic Speech Rehabilitation Platform"
+subtitle: "Senior Graduation Project — Arab American University (AAUP)"
+author: "Computer Systems Engineering"
+date: today
+---
+
+## Overview
+
+Communication is a fundamental human right and a critical vector for cognitive, social, and emotional development. Pediatric communication disorders present unique developmental hurdles that, if left unaddressed, can lead to permanent academic and social marginalization.
+
+This project integrates **computer vision**, **speech signal processing**, and **generative AI** to deliver an accessible, automated, and dialect-aware rehabilitation tool tailored for **Palestinian children**.
+
+---
+
+## The Problem
+
+In Palestine, pediatric communication disorders pose a severe public health crisis. Children suffering from disorders such as:
+
+- **Childhood Apraxia of Speech (CAS)**
+- **Verbal stuttering**
+- **Phonological deletion**
+- **Environmental language delays**
+
+...face profound barriers to social integration.
+
+The core issue lies in a compounding deficit of:
+
+| Barrier | Description |
+|---|---|
+| Clinical Shortages | Acute shortage of certified Speech-Language Pathologists (SLPs) |
+| Geographical Barriers | Infrastructure centralized in urban centers; rural families face prohibitive transport costs |
+| Dialectal Void | AI tools built for Western languages or MSA — not Palestinian/Levantine dialect |
+
+---
+
+## Local Statistics (Palestine)
+
+::: {.callout-important}
+## Key Data — Palestinian Central Bureau of Statistics (PCBS)
+
+- Communication disabilities are the **2nd most prevalent childhood disability** in Palestine — **37.3%** of all pediatric disability cases
+- West Bank: **35.7%** — Gaza Strip: **40.1%**
+- Jenin Governorate (AAUP home region): highest disability rate in the West Bank at **4.1%** of the total population
+- Rural children face an **Odds Ratio (OR) of 4.4** risk of prolonged speech delays due to low income
+- Congenital factors account for **33.6%** of communication disabilities
+:::
+
+---
+
+## System Architecture
+
+The platform is composed of **7 modules** that address different aspects of speech rehabilitation:
+
+```{mermaid}
+graph TD
+    A[AI Arabic Speech Rehabilitation Platform] --> B[Saif Module\nLip Apraxia Vision]
+    A --> C[Layla Module\nSpeech-to-Text]
+    A --> D[Habibi TTS\nArabic Synthesis]
+    A --> E[Multimodal System\nCombined Pipeline]
+    A --> F[Story Generator\nQwen LLM]
+    A --> G[Qwen3 ASR\nAdvanced STT]
+    A --> H[Maze Craze\nGamification]
+
+    B --> B1[MediaPipe Face Mesh\nLPR Calculation]
+    C --> C1[OpenAI Whisper\nArabic Phonology]
+    D --> D1[Habibi-TTS\nDialect-Aware]
+    F --> F1[Offline Qwen LLM\nArabic Stories]
+    G --> G1[Qwen3-ASR\nWord-Level Timestamps]
+```
+
+---
+
+## Module Overview
+
+::: {.grid}
+
+::: {.g-col-6}
+### Saif — Lip Vision {.prototype-card}
+Real-time **Childhood Apraxia of Speech (CAS)** assessment using MediaPipe Face Mesh.  
+Calculates the **Lip Pucker Ratio (LPR)** to track jaw drops and lip-rounding.
+
+[View Details →](prototypes/lips-module.qmd){.btn .btn-primary}
+:::
+
+::: {.g-col-6}
+### Layla — Speech Analysis {.prototype-card}
+Arabic **phonological analysis** and fluency detection using OpenAI Whisper.  
+Targets phoneme-level error classification for stuttering and deletion disorders.
+
+[View Details →](prototypes/speech-module.qmd){.btn .btn-primary}
+:::
+
+::: {.g-col-6}
+### Habibi TTS {.prototype-card}
+Dialect-aware **Arabic text-to-speech** engine supporting MSA, Levantine, Egyptian, Saudi, and UAE dialects.
+
+[View Details →](prototypes/tts-module.qmd){.btn .btn-primary}
+:::
+
+::: {.g-col-6}
+### Multimodal System {.prototype-card}
+Combined **vision + audio** pipeline integrating lip tracking and speech scoring into a single unified Gradio interface.
+
+[View Details →](prototypes/multimodal.qmd){.btn .btn-primary}
+:::
+
+::: {.g-col-6}
+### Story Generator {.prototype-card}
+Offline **Qwen LLM** that generates child-safe, vocalized Arabic therapy stories with target words embedded.
+
+[View Details →](prototypes/story-generator.qmd){.btn .btn-primary}
+:::
+
+::: {.g-col-6}
+### Maze Craze Game {.prototype-card}
+Browser-based **gamification layer** — children navigate mazes to practice speech targets in a rewarding context.
+
+[View Details →](prototypes/maze-game.qmd){.btn .btn-primary}
+:::
+
+:::
+
+---
+
+## Technology Stack
+
+| Layer | Technology |
+|---|---|
+| Face Vision | MediaPipe Face Mesh, OpenCV |
+| Speech Recognition | OpenAI Whisper, Qwen3-ASR |
+| Text-to-Speech | Habibi-TTS (dialect-aware) |
+| LLM / Story Gen | Qwen 2.5 (offline, local) |
+| UI / Interface | Gradio Blocks |
+| Gamification | HTML5 / JavaScript |
+| Runtime | Python 3.10+, PyTorch (CUDA/CPU) |

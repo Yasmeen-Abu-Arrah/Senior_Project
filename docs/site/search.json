@@ -1,0 +1,962 @@
+[
+  {
+    "objectID": "code/index.html",
+    "href": "code/index.html",
+    "title": "Source Code Reference",
+    "section": "",
+    "text": "All Python prototype files are organized below with direct links and descriptions.\n\n\n\nFile\nModule\nDescription\n\n\n\n\nlips_prototype.py\nSaif\nMediaPipe lip vision + LPR calculation\n\n\nspeech_prototype.py\nLayla\nWhisper Arabic STT + phonological analysis\n\n\ntts_prototype.py\nHabibi TTS\nDialect-aware Arabic speech synthesis\n\n\nmultimodal_prototype.py\nMultimodal\nThread-safe vision + audio combined system\n\n\nStory_Generator.py\nStory Gen\nOffline Qwen LLM story generation\n\n\nmerged_prototype.py\nMerged\nAdvanced story + vision merged pipeline\n\n\nQwen3-ASR.py\nQwen ASR\nWord-level timestamped ASR",
+    "crumbs": [
+      "Home",
+      "Source Code",
+      "All Source Files"
+    ]
+  },
+  {
+    "objectID": "code/index.html#source-files",
+    "href": "code/index.html#source-files",
+    "title": "Source Code Reference",
+    "section": "",
+    "text": "All Python prototype files are organized below with direct links and descriptions.\n\n\n\nFile\nModule\nDescription\n\n\n\n\nlips_prototype.py\nSaif\nMediaPipe lip vision + LPR calculation\n\n\nspeech_prototype.py\nLayla\nWhisper Arabic STT + phonological analysis\n\n\ntts_prototype.py\nHabibi TTS\nDialect-aware Arabic speech synthesis\n\n\nmultimodal_prototype.py\nMultimodal\nThread-safe vision + audio combined system\n\n\nStory_Generator.py\nStory Gen\nOffline Qwen LLM story generation\n\n\nmerged_prototype.py\nMerged\nAdvanced story + vision merged pipeline\n\n\nQwen3-ASR.py\nQwen ASR\nWord-level timestamped ASR",
+    "crumbs": [
+      "Home",
+      "Source Code",
+      "All Source Files"
+    ]
+  },
+  {
+    "objectID": "code/index.html#download-scripts",
+    "href": "code/index.html#download-scripts",
+    "title": "Source Code Reference",
+    "section": "Download Scripts",
+    "text": "Download Scripts\n\n\n\nFile\nPurpose\n\n\n\n\nwhisper_download.py\nDownload Whisper model weights\n\n\nqwen_model_download.py\nDownload Qwen3-ASR weights\n\n\nDownload_the_TextGeneration_Model.py\nDownload Qwen text model\n\n\ndownload_assets.py\nDownload fonts and misc assets\n\n\nAmiri_font_download.py\nDownload Amiri Arabic font",
+    "crumbs": [
+      "Home",
+      "Source Code",
+      "All Source Files"
+    ]
+  },
+  {
+    "objectID": "prototypes/story-generator.html",
+    "href": "prototypes/story-generator.html",
+    "title": "Story Generator — Arabic Therapy Stories",
+    "section": "",
+    "text": "The Story Generator uses a locally-hosted Qwen 2.5 language model to generate child-safe, fully vocalized Arabic stories that embed target therapy words. It enables therapists and parents to create personalized, engaging reading materials specifically tuned to a child’s current speech therapy targets.\nAll inference is 100% offline — no internet connection is required after the initial model download.",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Story Generator"
+    ]
+  },
+  {
+    "objectID": "prototypes/story-generator.html#overview",
+    "href": "prototypes/story-generator.html#overview",
+    "title": "Story Generator — Arabic Therapy Stories",
+    "section": "",
+    "text": "The Story Generator uses a locally-hosted Qwen 2.5 language model to generate child-safe, fully vocalized Arabic stories that embed target therapy words. It enables therapists and parents to create personalized, engaging reading materials specifically tuned to a child’s current speech therapy targets.\nAll inference is 100% offline — no internet connection is required after the initial model download.",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Story Generator"
+    ]
+  },
+  {
+    "objectID": "prototypes/story-generator.html#clinical-purpose",
+    "href": "prototypes/story-generator.html#clinical-purpose",
+    "title": "Story Generator — Arabic Therapy Stories",
+    "section": "Clinical Purpose",
+    "text": "Clinical Purpose\nStory-based therapy is a research-backed technique for generalizing speech production gains. By embedding target words in a narrative context:\n\nChildren encounter the phoneme in natural, meaningful contexts\nRepeated exposure across the story reinforces motor pattern consolidation\nThe vocalization (tashkeel / حركات) makes the text readable for young learners\nStories follow everyday themes familiar to Palestinian children",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Story Generator"
+    ]
+  },
+  {
+    "objectID": "prototypes/story-generator.html#system-architecture",
+    "href": "prototypes/story-generator.html#system-architecture",
+    "title": "Story Generator — Arabic Therapy Stories",
+    "section": "System Architecture",
+    "text": "System Architecture\n\n\n\n\n\nflowchart LR\n    A[Therapist Inputs\\nTarget Words + Theme] --&gt; B[System Prompt\\nBuilder]\n    B --&gt; C[Qwen 2.5\\nLocal LLM\\nOffline]\n    C --&gt; D[Generated Story\\nFully Vocalized Arabic]\n    D --&gt; E[Gradio Text Output]",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Story Generator"
+    ]
+  },
+  {
+    "objectID": "prototypes/story-generator.html#story-generation-pipeline",
+    "href": "prototypes/story-generator.html#story-generation-pipeline",
+    "title": "Story Generator — Arabic Therapy Stories",
+    "section": "Story Generation Pipeline",
+    "text": "Story Generation Pipeline\n\nSystem Prompt Engineering\nThe LLM is constrained by a carefully engineered Arabic system prompt that enforces:\n\nSimplified vocabulary — age-appropriate for children 3–7\nFull vocalization (tashkeel) — critical for correct Arabic reading\nTarget word embedding — wrapped in parentheses (قطار) for visibility\nCultural safety — no religious, violent, or adult content\nEveryday themes — playground, school morning, colored blocks",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Story Generator"
+    ]
+  },
+  {
+    "objectID": "prototypes/story-generator.html#full-source-code",
+    "href": "prototypes/story-generator.html#full-source-code",
+    "title": "Story Generator — Arabic Therapy Stories",
+    "section": "Full Source Code",
+    "text": "Full Source Code\n\n\n\nCode\n\nStory_Generator.py\n\nimport os\nimport gradio as gr\nfrom transformers import AutoModelForCausalLM, AutoTokenizer\nimport torch\n\nLOCAL_MODEL_PATH = \"./qwen_text_model\"\n\nif not os.path.exists(LOCAL_MODEL_PATH) or not os.listdir(LOCAL_MODEL_PATH):\n    raise FileNotFoundError(\n        \"Local text model folder is empty! Run the download script first.\"\n    )\n\nprint(\"Loading Qwen Text Model offline...\")\ndevice      = \"cuda\" if torch.cuda.is_available() else \"cpu\"\ntorch_dtype = torch.float16 if device == \"cuda\" else torch.float32\n\ntokenizer = AutoTokenizer.from_pretrained(LOCAL_MODEL_PATH)\nmodel     = AutoModelForCausalLM.from_pretrained(\n    LOCAL_MODEL_PATH,\n    torch_dtype=torch_dtype,\n    device_map=device\n)\nprint(f\"Story Generator loaded on {device.upper()}!\")\n\n\ndef generate_safe_story(target_words: str, story_theme: str) -&gt; str:\n    if not target_words.strip():\n        return \"Please enter target words first.\"\n\n    system_prompt = (\n        \"أنت كاتب محترف لقصص الأطفال الصغار جداً، وتكتب باللغة العربية الفصحى المبسطة \"\n        \"والمشكولة بالكامل (بالحركات).\\n\"\n        \"مهمتك: كتابة قصة قصيرة جداً، بسيطة، تدور حول أحداث يومية عادية يفهمها الطفل الصغير.\\n\"\n        \"شروط صارمة:\\n\"\n        \"1. تجنب المفاهيم الأخلاقية أو الدينية أو الفلسفية العميقة.\\n\"\n        \"2. لا محتوى للبالغين أو عنف أو أفكار مخيفة.\\n\"\n        \"3. ادمج الكلمات المستهدفة بشكل متكرر وطبيعي داخل السرد.\\n\"\n        \"4. ضع الكلمات المستهدفة بين قوسين مثل: (عصفور)، (قطار) في كل مرة تظهر.\"\n    )\n\n    user_prompt = (\n        f\"السياق العام للقصة: {story_theme}\\n\"\n        f\"الكلمات المستهدفة (ضعها بين قوسين وكررها): {target_words}\"\n    )\n\n    messages = [\n        {\"role\": \"system\", \"content\": system_prompt},\n        {\"role\": \"user\",   \"content\": user_prompt}\n    ]\n\n    text = tokenizer.apply_chat_template(\n        messages,\n        tokenize=False,\n        add_generation_prompt=True\n    )\n\n    model_inputs = tokenizer([text], return_tensors=\"pt\").to(device)\n\n    with torch.no_grad():\n        generated_ids = model.generate(\n            **model_inputs,\n            max_new_tokens=800,\n            temperature=0.6,  # Low temperature = strict, predictable output\n            top_p=0.9\n        )\n\n    generated_ids = [\n        output_ids[len(input_ids):]\n        for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)\n    ]\n\n    return tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]\n\n\n# Gradio Interface\nwith gr.Blocks(title=\"Arabic Children's Story Generator (Offline)\") as demo:\n    gr.Markdown(\"# 📚 Arabic Therapy Story Generator — Offline\")\n    gr.Markdown(\n        \"Generates simple, vocalized Arabic stories for children, \"\n        \"with therapy target words embedded and highlighted.\"\n    )\n\n    with gr.Row():\n        with gr.Column():\n            gr.Markdown(\"### Story Settings\")\n            words_input = gr.Textbox(\n                label=\"Target Words (comma-separated)\",\n                placeholder=\"e.g.: عصفور، قطار\",\n                lines=2\n            )\n            theme_input = gr.Dropdown(\n                choices=[\n                    \"يوم جميل وممتع في الحديقة العامة\",\n                    \"اللعب بالألعاب الجميلة في غرفتي\",\n                    \"ذهاب الطفل إلى المدرسة صباحاً ومشاهدة الطريق\",\n                    \"مساعدة الأم في ترتيب المكعبات الملونة\"\n                ],\n                value=\"يوم جميل وممتع في الحديقة العامة\",\n                label=\"Story Theme\"\n            )\n            generate_btn = gr.Button(\"Generate Story\", variant=\"primary\")\n\n        with gr.Column():\n            gr.Markdown(\"### Generated Story\")\n            story_output = gr.Textbox(\n                label=\"Vocalized Arabic Story\",\n                lines=15,\n                placeholder=\"Story will appear here...\"\n            )\n\n    generate_btn.click(\n        fn=generate_safe_story,\n        inputs=[words_input, theme_input],\n        outputs=story_output\n    )\n\nif __name__ == \"__main__\":\n    demo.launch()",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Story Generator"
+    ]
+  },
+  {
+    "objectID": "prototypes/story-generator.html#running-the-module",
+    "href": "prototypes/story-generator.html#running-the-module",
+    "title": "Story Generator — Arabic Therapy Stories",
+    "section": "Running the Module",
+    "text": "Running the Module\nconda activate speech_therapy\npython Story_Generator.py",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Story Generator"
+    ]
+  },
+  {
+    "objectID": "prototypes/story-generator.html#story-output-example",
+    "href": "prototypes/story-generator.html#story-output-example",
+    "title": "Story Generator — Arabic Therapy Stories",
+    "section": "Story Output Example",
+    "text": "Story Output Example\nInput: Target words: قطار، عصفور | Theme: يوم في الحديقة\nOutput (excerpt): &gt; كانَ (الْعُصْفُورُ) الصَّغيرُ يَجْلِسُ عَلى غُصْنٍ قَريبٍ مِنَ السِّكَّةِ،\n&gt; وَفَجْأةً سَمِعَ صَوْتَ الـ(قِطَارِ) يَقْتَرِبُ بِسُرْعةٍ…\n\n\n\n\n\n\nTipTherapist Usage Tip\n\n\n\nAfter generating a story, combine it with the Habibi TTS module to produce an audio reading of the story — giving the child both visual (text) and auditory (speech model) input.",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Story Generator"
+    ]
+  },
+  {
+    "objectID": "prototypes/story-generator.html#key-dependencies",
+    "href": "prototypes/story-generator.html#key-dependencies",
+    "title": "Story Generator — Arabic Therapy Stories",
+    "section": "Key Dependencies",
+    "text": "Key Dependencies\n\n\n\nPackage\nPurpose\n\n\n\n\ntransformers\nLoad and run Qwen LLM locally\n\n\ntorch\nGPU/CPU inference\n\n\ngradio\nWeb interface",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Story Generator"
+    ]
+  },
+  {
+    "objectID": "prototypes/qwen-asr.html",
+    "href": "prototypes/qwen-asr.html",
+    "title": "Qwen3 ASR — Advanced Speech Recognition",
+    "section": "",
+    "text": "The Qwen3 ASR Module is an advanced speech-to-text engine that goes beyond basic transcription. It uses the Qwen3-ASR model running fully offline to produce:\n\nHigh-accuracy Arabic transcription\nWord-level timestamps — exact start/end time for each spoken word\nBilingual support — Arabic and English in a single interface\n\nWord-level timestamps are clinically significant: they allow therapists to identify hesitations, prolongations, and phoneme insertion points — patterns critical for stuttering and fluency disorder assessment.",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Qwen3 ASR"
+    ]
+  },
+  {
+    "objectID": "prototypes/qwen-asr.html#overview",
+    "href": "prototypes/qwen-asr.html#overview",
+    "title": "Qwen3 ASR — Advanced Speech Recognition",
+    "section": "",
+    "text": "The Qwen3 ASR Module is an advanced speech-to-text engine that goes beyond basic transcription. It uses the Qwen3-ASR model running fully offline to produce:\n\nHigh-accuracy Arabic transcription\nWord-level timestamps — exact start/end time for each spoken word\nBilingual support — Arabic and English in a single interface\n\nWord-level timestamps are clinically significant: they allow therapists to identify hesitations, prolongations, and phoneme insertion points — patterns critical for stuttering and fluency disorder assessment.",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Qwen3 ASR"
+    ]
+  },
+  {
+    "objectID": "prototypes/qwen-asr.html#clinical-significance-of-word-level-timestamps",
+    "href": "prototypes/qwen-asr.html#clinical-significance-of-word-level-timestamps",
+    "title": "Qwen3 ASR — Advanced Speech Recognition",
+    "section": "Clinical Significance of Word-Level Timestamps",
+    "text": "Clinical Significance of Word-Level Timestamps\n\n\n\nMetric\nClinical Indicator\n\n\n\n\nLong gap before a word\nHesitation / word-finding difficulty\n\n\nShort burst of multiple words\nRapid/rushed fluency pattern\n\n\nExtended word duration\nPhoneme prolongation (stuttering)\n\n\nMissing word boundary\nPhoneme deletion or coarticulation error",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Qwen3 ASR"
+    ]
+  },
+  {
+    "objectID": "prototypes/qwen-asr.html#system-architecture",
+    "href": "prototypes/qwen-asr.html#system-architecture",
+    "title": "Qwen3 ASR — Advanced Speech Recognition",
+    "section": "System Architecture",
+    "text": "System Architecture\n\n\n\n\n\nflowchart LR\n    A[Audio Input\\nMic or File] --&gt; B[Qwen3-ASR\\nLocal Model]\n    B --&gt; C[Transcription\\nFull Text]\n    B --&gt; D[Word Objects\\nwith Timestamps]\n    C --&gt; E[Text Output Tab]\n    D --&gt; F[Timeline Output Tab\\n⏱️ word start-end]\n    E --&gt; G[Gradio Blocks UI]\n    F --&gt; G",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Qwen3 ASR"
+    ]
+  },
+  {
+    "objectID": "prototypes/qwen-asr.html#full-source-code",
+    "href": "prototypes/qwen-asr.html#full-source-code",
+    "title": "Qwen3 ASR — Advanced Speech Recognition",
+    "section": "Full Source Code",
+    "text": "Full Source Code\n\n\n\nCode\n\nQwen3-ASR.py\n\nimport os\nimport gradio as gr\nfrom qwen_asr import Qwen3ASRModel\nimport torch\n\nLOCAL_MODEL_PATH = \"./qwen_model\"\n\nif not os.path.exists(LOCAL_MODEL_PATH) or not os.listdir(LOCAL_MODEL_PATH):\n    raise FileNotFoundError(\n        \"Local model folder is empty! Please run the download script first.\"\n    )\n\nprint(\"Loading Qwen3-ASR model from local folder...\")\ndevice      = \"cuda:0\" if torch.cuda.is_available() else \"cpu\"\ntorch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32\n\nmodel = Qwen3ASRModel.from_pretrained(\n    LOCAL_MODEL_PATH,\n    dtype=torch_dtype,\n    device_map=device,\n    trust_remote_code=True\n)\nprint(f\"Model loaded on {device.upper()}!\")\n\n\ndef format_timestamps(results) -&gt; tuple[str, str]:\n    \"\"\"Parse Qwen3 ASR output into text + word-level timeline.\"\"\"\n    if isinstance(results, list) and len(results) &gt; 0:\n        results = results[0]\n\n    text_out = getattr(results, \"text\", \"\")\n    time_out = \"\"\n\n    if hasattr(results, \"words\") and results.words:\n        lines = []\n        for w in results.words:\n            word  = getattr(w, \"word\",  \"\")\n            start = getattr(w, \"start\", 0.0)\n            end   = getattr(w, \"end\",   0.0)\n            lines.append(f\"⏱️ [{start:05.2f}s → {end:05.2f}s] : {word}\")\n        time_out = \"\\n\".join(lines)\n    else:\n        time_out = \"No timestamps returned. Ensure clean audio input.\"\n\n    return text_out, time_out\n\n\ndef process_audio(audio_source, mic_file, uploaded_file, language) -&gt; tuple[str, str]:\n    \"\"\"Route audio from microphone or file upload to the ASR model.\"\"\"\n    active_file = mic_file if audio_source == \"Microphone\" else uploaded_file\n\n    if not active_file:\n        return \"❌ No audio provided.\", \"Please record or upload audio first.\"\n\n    try:\n        lang_tag = \"Arabic\" if language == \"Arabic\" else \"English\"\n        results  = model.transcribe(audio=active_file, language=lang_tag)\n        return format_timestamps(results)\n\n    except Exception as e:\n        return \"❌ Error.\", f\"Exception: {str(e)}\"\n\n\n# Gradio Interface\nwith gr.Blocks(title=\"Qwen3 Advanced ASR — Offline\") as demo:\n    gr.Markdown(\"# 🔬 Qwen3 ASR — Word-Level Timestamped Transcription\")\n    gr.Markdown(\n        \"Advanced offline speech recognition with word-level timestamps. \"\n        \"Supports **Arabic** and **English** audio input.\"\n    )\n\n    with gr.Row():\n        source_toggle = gr.Radio(\n            choices=[\"Microphone\", \"File Upload\"],\n            value=\"Microphone\",\n            label=\"Audio Source\"\n        )\n        language_selector = gr.Dropdown(\n            choices=[\"Arabic\", \"English\"],\n            value=\"Arabic\",\n            label=\"Language\"\n        )\n\n    with gr.Row():\n        mic_input  = gr.Audio(sources=[\"microphone\"], type=\"filepath\", label=\"Microphone\")\n        file_input = gr.Audio(sources=[\"upload\"],     type=\"filepath\", label=\"Upload Audio\")\n\n    analyze_btn = gr.Button(\"Analyze Speech 🔬\", variant=\"primary\")\n\n    with gr.Row():\n        text_output = gr.Textbox(label=\"Full Transcription\",        lines=4)\n        time_output = gr.Textbox(label=\"Word-Level Timeline\",       lines=10)\n\n    analyze_btn.click(\n        fn=process_audio,\n        inputs=[source_toggle, mic_input, file_input, language_selector],\n        outputs=[text_output, time_output]\n    )\n\nif __name__ == \"__main__\":\n    demo.launch(share=True)",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Qwen3 ASR"
+    ]
+  },
+  {
+    "objectID": "prototypes/qwen-asr.html#running-the-module",
+    "href": "prototypes/qwen-asr.html#running-the-module",
+    "title": "Qwen3 ASR — Advanced Speech Recognition",
+    "section": "Running the Module",
+    "text": "Running the Module\nconda activate speech_therapy\npython Qwen3-ASR.py",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Qwen3 ASR"
+    ]
+  },
+  {
+    "objectID": "prototypes/qwen-asr.html#sample-output",
+    "href": "prototypes/qwen-asr.html#sample-output",
+    "title": "Qwen3 ASR — Advanced Speech Recognition",
+    "section": "Sample Output",
+    "text": "Sample Output\nInput audio: Child saying “قِطَارٌ كَبيرٌ” (Large train)\nFull Transcription:\nقطار كبير\nWord-Level Timeline:\n⏱️ [00.00s → 00.42s] : قطار\n⏱️ [00.55s → 00.91s] : كبير\n\n\n\n\n\n\nTipClinical Insight\n\n\n\nThe gap between 00.42s and 00.55s (130ms) is clinically normal.\nGaps exceeding 250ms between consecutive words may indicate word-finding hesitation or motor planning delays consistent with apraxia.",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Qwen3 ASR"
+    ]
+  },
+  {
+    "objectID": "prototypes/qwen-asr.html#key-dependencies",
+    "href": "prototypes/qwen-asr.html#key-dependencies",
+    "title": "Qwen3 ASR — Advanced Speech Recognition",
+    "section": "Key Dependencies",
+    "text": "Key Dependencies\n\n\n\nPackage\nPurpose\n\n\n\n\nqwen_asr\nQwen3-ASR model and inference engine\n\n\ntorch\nGPU inference\n\n\ngradio\nWeb interface",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Qwen3 ASR"
+    ]
+  },
+  {
+    "objectID": "prototypes/maze-game.html",
+    "href": "prototypes/maze-game.html",
+    "title": "Maze Craze — Gamification Layer",
+    "section": "",
+    "text": "Maze Craze is the gamification layer of the rehabilitation platform. It wraps speech therapy exercises inside an engaging, browser-based maze game built with Phaser 3 — a professional HTML5 game framework.\nChildren navigate a maze character to collect coins and reach the goal. The game is designed as a reward wrapper around therapy sessions — correct pronunciation unlocks movement or rewards, creating positive reinforcement loops.\nTwo versions exist: v1 (classic grid maze) and v2 (enhanced with assets and improved UI).",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Maze Craze Game"
+    ]
+  },
+  {
+    "objectID": "prototypes/maze-game.html#overview",
+    "href": "prototypes/maze-game.html#overview",
+    "title": "Maze Craze — Gamification Layer",
+    "section": "",
+    "text": "Maze Craze is the gamification layer of the rehabilitation platform. It wraps speech therapy exercises inside an engaging, browser-based maze game built with Phaser 3 — a professional HTML5 game framework.\nChildren navigate a maze character to collect coins and reach the goal. The game is designed as a reward wrapper around therapy sessions — correct pronunciation unlocks movement or rewards, creating positive reinforcement loops.\nTwo versions exist: v1 (classic grid maze) and v2 (enhanced with assets and improved UI).",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Maze Craze Game"
+    ]
+  },
+  {
+    "objectID": "prototypes/maze-game.html#gamification-rationale",
+    "href": "prototypes/maze-game.html#gamification-rationale",
+    "title": "Maze Craze — Gamification Layer",
+    "section": "Gamification Rationale",
+    "text": "Gamification Rationale\n\n\n\n\n\n\nNoteWhy Games?\n\n\n\nResearch in pediatric speech therapy consistently shows that intrinsic motivation dramatically improves therapy adherence and generalization. Children who play while practicing show 2-3x higher session engagement compared to drill-based approaches.\n\n\nKey design principles: - Immediate feedback — visual/audio rewards on correct production - Progressive difficulty — maze complexity increases with performance - Character selection — agency and personalization increase buy-in - Zero reading required — icon-based UI accessible to preliterate children",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Maze Craze Game"
+    ]
+  },
+  {
+    "objectID": "prototypes/maze-game.html#technology-stack",
+    "href": "prototypes/maze-game.html#technology-stack",
+    "title": "Maze Craze — Gamification Layer",
+    "section": "Technology Stack",
+    "text": "Technology Stack\n\n\n\nLayer\nTechnology\n\n\n\n\nGame Engine\nPhaser 3.55.2\n\n\nLanguage\nJavaScript (ES6+)\n\n\nRendering\nWebGL / Canvas\n\n\nDelivery\nBrowser (no install needed)",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Maze Craze Game"
+    ]
+  },
+  {
+    "objectID": "prototypes/maze-game.html#maze-grid-architecture-v1",
+    "href": "prototypes/maze-game.html#maze-grid-architecture-v1",
+    "title": "Maze Craze — Gamification Layer",
+    "section": "Maze Grid Architecture (v1)",
+    "text": "Maze Grid Architecture (v1)\nThe maze is defined as a 2D integer matrix:\n// Tile encoding:\n// 0 = walkable path\n// 1 = wall\n// 2 = collectible coin\n// 3 = goal tile\n\nconst mazeGrid = [\n    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],\n    [1, 0, 0, 0, 1, 0, 0, 0, 0, 2, 2, 1],\n    [1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1],\n    [1, 2, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1],\n    [1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],\n    [1, 0, 0, 2, 0, 1, 0, 0, 0, 1, 0, 1],\n    [1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1],\n    [1, 2, 0, 1, 0, 0, 0, 1, 2, 0, 3, 1],\n    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]\n];\n\nconst TILE_SIZE = 40; // pixels per tile",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Maze Craze Game"
+    ]
+  },
+  {
+    "objectID": "prototypes/maze-game.html#scene-architecture-phaser-3",
+    "href": "prototypes/maze-game.html#scene-architecture-phaser-3",
+    "title": "Maze Craze — Gamification Layer",
+    "section": "Scene Architecture (Phaser 3)",
+    "text": "Scene Architecture (Phaser 3)\nThe game uses Phaser’s Scene Manager to separate concerns:\n\n\n\n\n\nstateDiagram-v2\n    [*] --&gt; CharacterSelectScene\n    CharacterSelectScene --&gt; GameScene : Player selects character\n    GameScene --&gt; GameScene : Navigate maze, collect coins\n    GameScene --&gt; GameOverScene : Reach goal tile (3)\n    GameOverScene --&gt; CharacterSelectScene : Restart",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Maze Craze Game"
+    ]
+  },
+  {
+    "objectID": "prototypes/maze-game.html#core-game-logic",
+    "href": "prototypes/maze-game.html#core-game-logic",
+    "title": "Maze Craze — Gamification Layer",
+    "section": "Core Game Logic",
+    "text": "Core Game Logic\n// --- Character Selection Scene ---\nclass CharacterSelectScene extends Phaser.Scene {\n    constructor() { super('CharacterSelectScene'); }\n\n    preload() {\n        // Generate colored square sprites procedurally (no external assets needed)\n        this.createSquareTexture('hero_blue',  0x3498db);\n        this.createSquareTexture('hero_red',   0xe74c3c);\n        this.createSquareTexture('hero_green', 0x2ecc71);\n    }\n\n    create() {\n        const options = ['hero_blue', 'hero_red', 'hero_green'];\n        const names   = ['Aqua Knight', 'Crimson Rogue', 'Jade Ranger'];\n        this.selectedKey = 'hero_blue';\n\n        options.forEach((key, index) =&gt; {\n            const xPos = 120 + (index * 120);\n            const char = this.add.sprite(xPos, 200, key)\n                             .setInteractive()\n                             .setScale(1.5);\n\n            char.on('pointerdown', () =&gt; {\n                this.selectedKey = key;\n                // Update selection indicator\n            });\n        });\n\n        // Start button launches GameScene with selected character\n        this.add.rectangle(240, 320, 220, 50, 0x27ae60)\n            .setInteractive()\n            .on('pointerdown', () =&gt; {\n                this.scene.start('GameScene', { heroKey: this.selectedKey });\n            });\n    }\n}",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Maze Craze Game"
+    ]
+  },
+  {
+    "objectID": "prototypes/maze-game.html#html-entry-point",
+    "href": "prototypes/maze-game.html#html-entry-point",
+    "title": "Maze Craze — Gamification Layer",
+    "section": "HTML Entry Point",
+    "text": "HTML Entry Point\n&lt;!DOCTYPE html&gt;\n&lt;html lang=\"en\"&gt;\n&lt;head&gt;\n    &lt;meta charset=\"UTF-8\"&gt;\n    &lt;meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"&gt;\n    &lt;title&gt;Maze Craze&lt;/title&gt;\n    &lt;!-- Phaser 3 via CDN --&gt;\n    &lt;script src=\"https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js\"&gt;&lt;/script&gt;\n&lt;/head&gt;\n&lt;body&gt;\n    &lt;div id=\"game-container\"&gt;&lt;/div&gt;\n    &lt;script src=\"game.js\"&gt;&lt;/script&gt;\n&lt;/body&gt;\n&lt;/html&gt;",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Maze Craze Game"
+    ]
+  },
+  {
+    "objectID": "prototypes/maze-game.html#running-the-game",
+    "href": "prototypes/maze-game.html#running-the-game",
+    "title": "Maze Craze — Gamification Layer",
+    "section": "Running the Game",
+    "text": "Running the Game\nNo server or installation required.\n# Simply open in any modern browser\nstart games/Maze Craze v2/index.html\nOr double-click index.html in Windows Explorer.\n\n\n\n\n\n\nTipIntegration Tip\n\n\n\nTo connect Maze Craze with the speech modules, add a WebSocket listener in game.js that receives a “correct” signal from the Python backend (Gradio + WebSocket), then triggers the player’s movement reward animation.",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Maze Craze Game"
+    ]
+  },
+  {
+    "objectID": "prototypes/maze-game.html#game-versions",
+    "href": "prototypes/maze-game.html#game-versions",
+    "title": "Maze Craze — Gamification Layer",
+    "section": "Game Versions",
+    "text": "Game Versions\n\n\n\nVersion\nFeatures\n\n\n\n\nv1\nProcedural textures, character selection, basic maze grid\n\n\nv2\nSprite assets, improved animations, polished UI",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Maze Craze Game"
+    ]
+  },
+  {
+    "objectID": "installation.html",
+    "href": "installation.html",
+    "title": "Installation & Setup",
+    "section": "",
+    "text": "Note\n\n\n\nA CUDA-capable GPU is strongly recommended for real-time inference. All modules fall back gracefully to CPU, but response times will increase significantly.\n\n\n\n\n\nRequirement\nVersion\n\n\n\n\nPython\n3.10+\n\n\nCUDA Toolkit\n11.8+ (optional, for GPU)\n\n\nConda\nLatest\n\n\nGit\nLatest\n\n\nFFmpeg\nLatest\n\n\nRAM\n8 GB minimum, 16 GB recommended\n\n\nVRAM\n4 GB+ (for Whisper + MediaPipe concurrent)",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Installation & Setup"
+    ]
+  },
+  {
+    "objectID": "installation.html#requirements",
+    "href": "installation.html#requirements",
+    "title": "Installation & Setup",
+    "section": "",
+    "text": "Note\n\n\n\nA CUDA-capable GPU is strongly recommended for real-time inference. All modules fall back gracefully to CPU, but response times will increase significantly.\n\n\n\n\n\nRequirement\nVersion\n\n\n\n\nPython\n3.10+\n\n\nCUDA Toolkit\n11.8+ (optional, for GPU)\n\n\nConda\nLatest\n\n\nGit\nLatest\n\n\nFFmpeg\nLatest\n\n\nRAM\n8 GB minimum, 16 GB recommended\n\n\nVRAM\n4 GB+ (for Whisper + MediaPipe concurrent)",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Installation & Setup"
+    ]
+  },
+  {
+    "objectID": "installation.html#step-1-create-the-conda-environment",
+    "href": "installation.html#step-1-create-the-conda-environment",
+    "title": "Installation & Setup",
+    "section": "Step 1 — Create the Conda Environment",
+    "text": "Step 1 — Create the Conda Environment\nconda create --name speech_therapy python=3.10 -y\nconda activate speech_therapy",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Installation & Setup"
+    ]
+  },
+  {
+    "objectID": "installation.html#step-2-install-ffmpeg",
+    "href": "installation.html#step-2-install-ffmpeg",
+    "title": "Installation & Setup",
+    "section": "Step 2 — Install FFmpeg",
+    "text": "Step 2 — Install FFmpeg\nFFmpeg is required by Whisper for audio decoding.\n\nWindows (Conda)Linux / WSLmacOS\n\n\nconda install -c conda-forge ffmpeg -y\n\n\nsudo apt update && sudo apt install ffmpeg -y\n\n\nbrew install ffmpeg",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Installation & Setup"
+    ]
+  },
+  {
+    "objectID": "installation.html#step-3-install-python-dependencies",
+    "href": "installation.html#step-3-install-python-dependencies",
+    "title": "Installation & Setup",
+    "section": "Step 3 — Install Python Dependencies",
+    "text": "Step 3 — Install Python Dependencies\npip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118\npip install openai-whisper\npip install mediapipe\npip install opencv-python\npip install gradio\npip install transformers accelerate\npip install soundfile\npip install numpy\n\n\n\n\n\n\nTipCPU-Only Installation\n\n\n\nIf you do not have a GPU, replace the PyTorch install command with:\npip install torch torchvision torchaudio",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Installation & Setup"
+    ]
+  },
+  {
+    "objectID": "installation.html#step-4-install-habibi-tts",
+    "href": "installation.html#step-4-install-habibi-tts",
+    "title": "Installation & Setup",
+    "section": "Step 4 — Install Habibi-TTS",
+    "text": "Step 4 — Install Habibi-TTS\nThe TTS module uses Habibi-TTS, a dialect-aware Arabic speech synthesis engine.\n# Clone the Habibi-TTS repository inside the project folder\ngit clone https://github.com/Habibi-TTS/Habibi-TTS-main\n\n# Install its dependencies\ncd Habibi-TTS-main\npip install -r requirements.txt\ncd ..",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Installation & Setup"
+    ]
+  },
+  {
+    "objectID": "installation.html#step-5-download-ai-models",
+    "href": "installation.html#step-5-download-ai-models",
+    "title": "Installation & Setup",
+    "section": "Step 5 — Download AI Models",
+    "text": "Step 5 — Download AI Models\nEach model must be downloaded separately. Run the download scripts from the project root:\n# Download OpenAI Whisper (base model — Arabic optimized)\npython whisper_download.py\n\n# Download Qwen Text Generation Model (for Story Generator)\npython qwen_model_download.py\n\n# Download Qwen3-ASR Model (for Advanced STT)\npython Download_the_TextGeneration_Model.py\n\n# Download additional assets (fonts, etc.)\npython download_assets.py\n\n\n\n\n\n\nWarningDisk Space\n\n\n\nModel downloads require approximately 5–10 GB of disk space total.\nEnsure your drive has sufficient free space before running download scripts.",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Installation & Setup"
+    ]
+  },
+  {
+    "objectID": "installation.html#step-6-download-mediapipe-face-landmarker",
+    "href": "installation.html#step-6-download-mediapipe-face-landmarker",
+    "title": "Installation & Setup",
+    "section": "Step 6 — Download MediaPipe Face Landmarker",
+    "text": "Step 6 — Download MediaPipe Face Landmarker\nThe Lip Vision module requires the MediaPipe face landmark task file.\npython Amiri_font_download.py\nOr download manually:\nwget -O face_landmarker.task https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Installation & Setup"
+    ]
+  },
+  {
+    "objectID": "installation.html#step-7-verify-the-environment",
+    "href": "installation.html#step-7-verify-the-environment",
+    "title": "Installation & Setup",
+    "section": "Step 7 — Verify the Environment",
+    "text": "Step 7 — Verify the Environment\nRun this quick check to confirm all key dependencies are loaded:\nimport torch\nimport whisper\nimport mediapipe\nimport cv2\nimport gradio\nimport transformers\n\nprint(f\"PyTorch:      {torch.__version__}\")\nprint(f\"CUDA:         {torch.cuda.is_available()}\")\nprint(f\"OpenCV:       {cv2.__version__}\")\nprint(f\"Gradio:       {gradio.__version__}\")\nprint(f\"Transformers: {transformers.__version__}\")\nprint(\"All dependencies OK!\")",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Installation & Setup"
+    ]
+  },
+  {
+    "objectID": "installation.html#project-folder-structure",
+    "href": "installation.html#project-folder-structure",
+    "title": "Installation & Setup",
+    "section": "Project Folder Structure",
+    "text": "Project Folder Structure\nAfter setup, your project directory should look like this:\nCommunication Disorders/\n├── lips_prototype.py          # Saif — Lip Apraxia Vision\n├── speech_prototype.py        # Layla — Whisper STT\n├── tts_prototype.py           # Habibi TTS\n├── multimodal_prototype.py    # Combined Multimodal System\n├── Story_Generator.py         # Arabic Story Generator\n├── merged_prototype.py        # Merged Story + Vision\n├── Qwen3-ASR.py               # Advanced Qwen ASR\n├── face_landmarker.task       # MediaPipe model asset\n├── whisper_models/            # Downloaded Whisper weights\n├── qwen_model/                # Qwen3-ASR model weights\n├── qwen_text_model/           # Qwen text model weights\n├── kokoro_cached_model/       # Cached TTS model\n├── Habibi-TTS-main/           # TTS engine source\n├── fonts/                     # Amiri Arabic font\n├── games/\n│   ├── Maze Craze v1/\n│   └── Maze Craze v2/\n├── whisper_download.py\n├── qwen_model_download.py\n├── download_assets.py\n└── py_env.md",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Installation & Setup"
+    ]
+  },
+  {
+    "objectID": "installation.html#running-each-module",
+    "href": "installation.html#running-each-module",
+    "title": "Installation & Setup",
+    "section": "Running Each Module",
+    "text": "Running Each Module\n\n\n\nModule\nCommand\n\n\n\n\nLip Apraxia Vision (Saif)\npython lips_prototype.py\n\n\nSpeech-to-Text (Layla)\npython speech_prototype.py\n\n\nArabic TTS\npython tts_prototype.py\n\n\nMultimodal System\npython multimodal_prototype.py\n\n\nStory Generator\npython Story_Generator.py\n\n\nAdvanced ASR (Qwen3)\npython Qwen3-ASR.py\n\n\nMaze Game\nOpen games/Maze Craze v2/index.html in browser",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Installation & Setup"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "AI-Driven Arabic Speech Rehabilitation Platform",
+    "section": "",
+    "text": "Communication is a fundamental human right and a critical vector for cognitive, social, and emotional development. Pediatric communication disorders present unique developmental hurdles that, if left unaddressed, can lead to permanent academic and social marginalization.\nThis project integrates computer vision, speech signal processing, and generative AI to deliver an accessible, automated, and dialect-aware rehabilitation tool tailored for Palestinian children.",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "AI-Driven Arabic Speech Rehabilitation Platform"
+    ]
+  },
+  {
+    "objectID": "index.html#overview",
+    "href": "index.html#overview",
+    "title": "AI-Driven Arabic Speech Rehabilitation Platform",
+    "section": "",
+    "text": "Communication is a fundamental human right and a critical vector for cognitive, social, and emotional development. Pediatric communication disorders present unique developmental hurdles that, if left unaddressed, can lead to permanent academic and social marginalization.\nThis project integrates computer vision, speech signal processing, and generative AI to deliver an accessible, automated, and dialect-aware rehabilitation tool tailored for Palestinian children.",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "AI-Driven Arabic Speech Rehabilitation Platform"
+    ]
+  },
+  {
+    "objectID": "index.html#the-problem",
+    "href": "index.html#the-problem",
+    "title": "AI-Driven Arabic Speech Rehabilitation Platform",
+    "section": "The Problem",
+    "text": "The Problem\nIn Palestine, pediatric communication disorders pose a severe public health crisis. Children suffering from disorders such as:\n\nChildhood Apraxia of Speech (CAS)\nVerbal stuttering\nPhonological deletion\nEnvironmental language delays\n\n…face profound barriers to social integration.\nThe core issue lies in a compounding deficit of:\n\n\n\n\n\n\n\nBarrier\nDescription\n\n\n\n\nClinical Shortages\nAcute shortage of certified Speech-Language Pathologists (SLPs)\n\n\nGeographical Barriers\nInfrastructure centralized in urban centers; rural families face prohibitive transport costs\n\n\nDialectal Void\nAI tools built for Western languages or MSA — not Palestinian/Levantine dialect",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "AI-Driven Arabic Speech Rehabilitation Platform"
+    ]
+  },
+  {
+    "objectID": "index.html#local-statistics-palestine",
+    "href": "index.html#local-statistics-palestine",
+    "title": "AI-Driven Arabic Speech Rehabilitation Platform",
+    "section": "Local Statistics (Palestine)",
+    "text": "Local Statistics (Palestine)\n\n\n\n\n\n\nImportantKey Data — Palestinian Central Bureau of Statistics (PCBS)\n\n\n\n\nCommunication disabilities are the 2nd most prevalent childhood disability in Palestine — 37.3% of all pediatric disability cases\nWest Bank: 35.7% — Gaza Strip: 40.1%\nJenin Governorate (AAUP home region): highest disability rate in the West Bank at 4.1% of the total population\nRural children face an Odds Ratio (OR) of 4.4 risk of prolonged speech delays due to low income\nCongenital factors account for 33.6% of communication disabilities",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "AI-Driven Arabic Speech Rehabilitation Platform"
+    ]
+  },
+  {
+    "objectID": "index.html#system-architecture",
+    "href": "index.html#system-architecture",
+    "title": "AI-Driven Arabic Speech Rehabilitation Platform",
+    "section": "System Architecture",
+    "text": "System Architecture\nThe platform is composed of 7 modules that address different aspects of speech rehabilitation:\n\n\n\n\n\ngraph TD\n    A[AI Arabic Speech Rehabilitation Platform] --&gt; B[Saif Module\\nLip Apraxia Vision]\n    A --&gt; C[Layla Module\\nSpeech-to-Text]\n    A --&gt; D[Habibi TTS\\nArabic Synthesis]\n    A --&gt; E[Multimodal System\\nCombined Pipeline]\n    A --&gt; F[Story Generator\\nQwen LLM]\n    A --&gt; G[Qwen3 ASR\\nAdvanced STT]\n    A --&gt; H[Maze Craze\\nGamification]\n\n    B --&gt; B1[MediaPipe Face Mesh\\nLPR Calculation]\n    C --&gt; C1[OpenAI Whisper\\nArabic Phonology]\n    D --&gt; D1[Habibi-TTS\\nDialect-Aware]\n    F --&gt; F1[Offline Qwen LLM\\nArabic Stories]\n    G --&gt; G1[Qwen3-ASR\\nWord-Level Timestamps]",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "AI-Driven Arabic Speech Rehabilitation Platform"
+    ]
+  },
+  {
+    "objectID": "index.html#module-overview",
+    "href": "index.html#module-overview",
+    "title": "AI-Driven Arabic Speech Rehabilitation Platform",
+    "section": "Module Overview",
+    "text": "Module Overview\n\n\nSaif — Lip Vision\nReal-time Childhood Apraxia of Speech (CAS) assessment using MediaPipe Face Mesh.\nCalculates the Lip Pucker Ratio (LPR) to track jaw drops and lip-rounding.\nView Details →\n\n\nLayla — Speech Analysis\nArabic phonological analysis and fluency detection using OpenAI Whisper.\nTargets phoneme-level error classification for stuttering and deletion disorders.\nView Details →\n\n\nHabibi TTS\nDialect-aware Arabic text-to-speech engine supporting MSA, Levantine, Egyptian, Saudi, and UAE dialects.\nView Details →\n\n\nMultimodal System\nCombined vision + audio pipeline integrating lip tracking and speech scoring into a single unified Gradio interface.\nView Details →\n\n\nStory Generator\nOffline Qwen LLM that generates child-safe, vocalized Arabic therapy stories with target words embedded.\nView Details →\n\n\nMaze Craze Game\nBrowser-based gamification layer — children navigate mazes to practice speech targets in a rewarding context.\nView Details →",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "AI-Driven Arabic Speech Rehabilitation Platform"
+    ]
+  },
+  {
+    "objectID": "index.html#technology-stack",
+    "href": "index.html#technology-stack",
+    "title": "AI-Driven Arabic Speech Rehabilitation Platform",
+    "section": "Technology Stack",
+    "text": "Technology Stack\n\n\n\nLayer\nTechnology\n\n\n\n\nFace Vision\nMediaPipe Face Mesh, OpenCV\n\n\nSpeech Recognition\nOpenAI Whisper, Qwen3-ASR\n\n\nText-to-Speech\nHabibi-TTS (dialect-aware)\n\n\nLLM / Story Gen\nQwen 2.5 (offline, local)\n\n\nUI / Interface\nGradio Blocks\n\n\nGamification\nHTML5 / JavaScript\n\n\nRuntime\nPython 3.10+, PyTorch (CUDA/CPU)",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "AI-Driven Arabic Speech Rehabilitation Platform"
+    ]
+  },
+  {
+    "objectID": "prototypes/lips-module.html",
+    "href": "prototypes/lips-module.html",
+    "title": "Saif Module — Lip Apraxia Vision",
+    "section": "",
+    "text": "The Saif Module is the computer vision core of the platform. It targets children diagnosed with Childhood Apraxia of Speech (CAS) — a neurological disorder where the brain struggles to plan and coordinate the precise oral movements needed for speech.\nThe module uses MediaPipe Face Mesh to extract 3D facial landmarks from a live webcam feed and continuously evaluates the child’s lip geometry against clinical articulatory targets.",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Saif — Lip Apraxia Vision"
+    ]
+  },
+  {
+    "objectID": "prototypes/lips-module.html#overview",
+    "href": "prototypes/lips-module.html#overview",
+    "title": "Saif Module — Lip Apraxia Vision",
+    "section": "",
+    "text": "The Saif Module is the computer vision core of the platform. It targets children diagnosed with Childhood Apraxia of Speech (CAS) — a neurological disorder where the brain struggles to plan and coordinate the precise oral movements needed for speech.\nThe module uses MediaPipe Face Mesh to extract 3D facial landmarks from a live webcam feed and continuously evaluates the child’s lip geometry against clinical articulatory targets.",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Saif — Lip Apraxia Vision"
+    ]
+  },
+  {
+    "objectID": "prototypes/lips-module.html#clinical-foundation-the-digital-dttc-protocol",
+    "href": "prototypes/lips-module.html#clinical-foundation-the-digital-dttc-protocol",
+    "title": "Saif Module — Lip Apraxia Vision",
+    "section": "Clinical Foundation — The Digital DTTC Protocol",
+    "text": "Clinical Foundation — The Digital DTTC Protocol\nThe module implements a software adaptation of the Dynamic Temporal and Tactile Cueing (DTTC) protocol, a gold-standard clinical technique for treating CAS. The core metric is the Lip Pucker Ratio (LPR):\n\\[\n\\text{LPR} = \\frac{d_{\\text{horizontal}}}{d_{\\text{vertical}} + \\epsilon}\n\\]\nWhere:\n\n\\(d_{\\text{horizontal}}\\) = pixel distance between left and right lip corners (landmarks 61 → 291)\n\\(d_{\\text{vertical}}\\) = pixel distance between upper and lower lip midpoints (landmarks 13 → 14)\n\\(\\epsilon = 0.001\\) — prevents division by zero\n\n\nLPR Decision Logic\n\n\n\nLPR Condition\nClinical State\nFeedback\n\n\n\n\n\\(d_v \\leq 12\\) px\nMouth fully closed\n✅ Letter B / M — Correct\n\n\n\\(\\text{LPR} &lt; 1.8\\)\nRounded pucker\n✅ Letter O / W — Correct\n\n\n\\(d_v &gt; 35\\) px\nMouth fully open\n✅ Letter A — Correct\n\n\nOtherwise\nIncorrect motor plan\n❌ Retry!",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Saif — Lip Apraxia Vision"
+    ]
+  },
+  {
+    "objectID": "prototypes/lips-module.html#landmark-mapping",
+    "href": "prototypes/lips-module.html#landmark-mapping",
+    "title": "Saif Module — Lip Apraxia Vision",
+    "section": "Landmark Mapping",
+    "text": "Landmark Mapping\n\n# MediaPipe Face Mesh — Lip Landmark IDs\nLIP_TOP    = 13   # Upper lip midpoint\nLIP_BOTTOM = 14   # Lower lip midpoint\nLIP_LEFT   = 61   # Left lip corner\nLIP_RIGHT  = 291  # Right lip corner",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Saif — Lip Apraxia Vision"
+    ]
+  },
+  {
+    "objectID": "prototypes/lips-module.html#full-source-code",
+    "href": "prototypes/lips-module.html#full-source-code",
+    "title": "Saif Module — Lip Apraxia Vision",
+    "section": "Full Source Code",
+    "text": "Full Source Code\n\n\n\nCode\n\nlips_prototype.py\n\nimport cv2\nimport mediapipe as mp\nimport math\n\n# Initialize MediaPipe Face Mesh\nmp_face_mesh = mp.solutions.face_mesh\nface_mesh = mp_face_mesh.FaceMesh(\n    max_num_faces=1,\n    refine_landmarks=True,\n    min_detection_confidence=0.5,\n    min_tracking_confidence=0.5\n)\n\n# Standard Mouth Landmark IDs\nLIP_TOP    = 13\nLIP_BOTTOM = 14\nLIP_LEFT   = 61\nLIP_RIGHT  = 291\n\n# Start Webcam\ncap = cv2.VideoCapture(0)\nprint(\"Webcam started. Press [ESC] or [Q] to close.\")\n\nwhile cap.isOpened():\n    success, frame = cap.read()\n    if not success:\n        continue\n\n    # Mirror the frame naturally for the child\n    frame = cv2.flip(frame, 1)\n    h, w, _ = frame.shape\n\n    rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)\n    results = face_mesh.process(rgb_frame)\n\n    status_text = \"Status: Waiting for action...\"\n    color = (255, 255, 255)\n\n    if results.multi_face_landmarks:\n        for face_landmarks in results.multi_face_landmarks:\n\n            # Extract landmark coordinates\n            pt_top    = face_landmarks.landmark[LIP_TOP]\n            pt_bottom = face_landmarks.landmark[LIP_BOTTOM]\n            pt_left   = face_landmarks.landmark[LIP_LEFT]\n            pt_right  = face_landmarks.landmark[LIP_RIGHT]\n\n            # Convert normalized values to pixel coordinates\n            y_top,    x_top    = int(pt_top.y * h),    int(pt_top.x * w)\n            y_bottom, x_bottom = int(pt_bottom.y * h), int(pt_bottom.x * w)\n            y_left,   x_left   = int(pt_left.y * h),   int(pt_left.x * w)\n            y_right,  x_right  = int(pt_right.y * h),  int(pt_right.x * w)\n\n            # Geometric calculations for Apraxia tracking\n            vertical_dist   = math.sqrt((x_top - x_bottom)**2 + (y_top - y_bottom)**2)\n            horizontal_dist = math.sqrt((x_left - x_right)**2 + (y_left - y_right)**2)\n            lip_ratio       = horizontal_dist / (vertical_dist + 0.001)\n\n            # Clinical Evaluation\n            if vertical_dist &lt;= 12:\n                status_text = \"GOAL - CLOSED: MOUTH CLOSED (Letter: B / M)\"\n                color = (0, 255, 0)\n            elif lip_ratio &lt; 1.8:\n                status_text = \"GOAL - ROUNDED: LIPS ROUNDED (Letter: O / W)\"\n                color = (0, 255, 0)\n            elif vertical_dist &gt; 35:\n                status_text = \"GOAL - OPEN: MOUTH OPEN (Letter: A)\"\n                color = (0, 255, 0)\n            else:\n                status_text = \"ALERT: Incorrect Planning - Retry!\"\n                color = (0, 0, 255)\n\n            # Draw augmented overlay on the child's mouth\n            for (x, y) in [(x_top, y_top), (x_bottom, y_bottom),\n                           (x_left, y_left), (x_right, y_right)]:\n                cv2.circle(frame, (x, y), 4, color, -1)\n            cv2.line(frame, (x_top, y_top), (x_bottom, y_bottom), (255, 0, 0), 1)\n            cv2.line(frame, (x_left, y_left), (x_right, y_right), (255, 0, 0), 1)\n\n    cv2.putText(frame, status_text, (20, 40),\n                cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2, cv2.LINE_AA)\n    cv2.imshow('Smart Speech Therapy - AI Camera Unit', frame)\n\n    if cv2.waitKey(1) & 0xFF in [27, ord('q')]:\n        break\n\ncap.release()\ncv2.destroyAllWindows()",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Saif — Lip Apraxia Vision"
+    ]
+  },
+  {
+    "objectID": "prototypes/lips-module.html#running-the-module",
+    "href": "prototypes/lips-module.html#running-the-module",
+    "title": "Saif Module — Lip Apraxia Vision",
+    "section": "Running the Module",
+    "text": "Running the Module\nconda activate speech_therapy\npython lips_prototype.py\n\n\n\n\n\n\nTipWebcam Tips\n\n\n\n\nEnsure the child’s face is well-lit from the front — avoid strong backlighting.\nPosition the camera at eye level, 40–70 cm from the child’s face.\nThe module renders a mirrored view so children can self-monitor naturally.",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Saif — Lip Apraxia Vision"
+    ]
+  },
+  {
+    "objectID": "prototypes/lips-module.html#key-dependencies",
+    "href": "prototypes/lips-module.html#key-dependencies",
+    "title": "Saif Module — Lip Apraxia Vision",
+    "section": "Key Dependencies",
+    "text": "Key Dependencies\n\n\n\nPackage\nPurpose\n\n\n\n\nmediapipe\n3D face landmark extraction\n\n\nopencv-python\nWebcam capture and frame rendering\n\n\nmath\nEuclidean distance / LPR calculation",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Saif — Lip Apraxia Vision"
+    ]
+  },
+  {
+    "objectID": "prototypes/multimodal.html",
+    "href": "prototypes/multimodal.html",
+    "title": "Multimodal System",
+    "section": "",
+    "text": "The Multimodal System is the most technically complex module in the platform. It fuses the Lip Apraxia Vision engine (Saif) and the Whisper Speech-to-Text engine (Layla) into a single, thread-safe, real-time application.\nThe system processes two simultaneous data streams: 1. Video stream — MediaPipe extracts 3D lip landmarks from the webcam at ~30 fps 2. Audio stream — Whisper transcribes the child’s recorded speech\nBoth streams run on separate threads to prevent blocking, managed by a centralized thread-safe state object.",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Multimodal System"
+    ]
+  },
+  {
+    "objectID": "prototypes/multimodal.html#overview",
+    "href": "prototypes/multimodal.html#overview",
+    "title": "Multimodal System",
+    "section": "",
+    "text": "The Multimodal System is the most technically complex module in the platform. It fuses the Lip Apraxia Vision engine (Saif) and the Whisper Speech-to-Text engine (Layla) into a single, thread-safe, real-time application.\nThe system processes two simultaneous data streams: 1. Video stream — MediaPipe extracts 3D lip landmarks from the webcam at ~30 fps 2. Audio stream — Whisper transcribes the child’s recorded speech\nBoth streams run on separate threads to prevent blocking, managed by a centralized thread-safe state object.",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Multimodal System"
+    ]
+  },
+  {
+    "objectID": "prototypes/multimodal.html#architecture",
+    "href": "prototypes/multimodal.html#architecture",
+    "title": "Multimodal System",
+    "section": "Architecture",
+    "text": "Architecture\n\n\n\n\n\nflowchart TD\n    subgraph Input\n        V[Webcam Feed] --&gt; VT[Video Thread]\n        A[Microphone] --&gt; AT[Audio Thread]\n    end\n\n    subgraph Models\n        VT --&gt; MP[MediaPipe\\nFace Mesh]\n        AT --&gt; WH[Whisper ASR\\nArabic]\n    end\n\n    subgraph State\n        MP --&gt; TS[ThreadSafeState\\n_lock: threading.Lock]\n        WH --&gt; TS\n    end\n\n    subgraph Output\n        TS --&gt; GR[Gradio Blocks\\nWeb UI]\n        GR --&gt; LPR[LPR Overlay\\nVisual Feedback]\n        GR --&gt; TXT[Phonological\\nFeedback Text]\n    end",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Multimodal System"
+    ]
+  },
+  {
+    "objectID": "prototypes/multimodal.html#configuration",
+    "href": "prototypes/multimodal.html#configuration",
+    "title": "Multimodal System",
+    "section": "Configuration",
+    "text": "Configuration\nThe entire system is controlled by a centralized AppConfig dataclass:\n\nfrom dataclasses import dataclass\n\n@dataclass\nclass AppConfig:\n    TARGET_WORD: str             = \"قطار\"\n    WHISPER_MODEL_SIZE: str      = \"base\"\n    WHISPER_LANGUAGE: str        = \"ar\"\n\n    MAX_FACES: int               = 1\n    MIN_DETECTION_CONFIDENCE: float = 0.5\n    MIN_TRACKING_CONFIDENCE: float  = 0.5\n\n    # LPR Clinical Thresholds\n    MIN_VERTICAL_OPENING: float  = 15.0\n    MIN_ASPECT_RATIO: float      = 1.8\n    SMOOTHING_WINDOW: int        = 5     # Frames for temporal smoothing\n\n    SIMILARITY_THRESHOLD: float  = 0.8\n\nCONFIG = AppConfig()",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Multimodal System"
+    ]
+  },
+  {
+    "objectID": "prototypes/multimodal.html#thread-safe-state-management",
+    "href": "prototypes/multimodal.html#thread-safe-state-management",
+    "title": "Multimodal System",
+    "section": "Thread-Safe State Management",
+    "text": "Thread-Safe State Management\n\n\nCode\nimport threading\nfrom collections import deque\nimport time\n\nclass ThreadSafeState:\n    \"\"\"Prevents race conditions between the video and audio threads.\"\"\"\n\n    def __init__(self):\n        self._lock = threading.Lock()\n        self._status = \"Initializing...\"\n        self._confidence_history = deque(maxlen=CONFIG.SMOOTHING_WINDOW)\n        self._last_update = time.time()\n        self._frame_count = 0\n        self._fps = 0.0\n\n    @property\n    def status(self) -&gt; str:\n        with self._lock: return self._status\n\n    @status.setter\n    def status(self, value: str):\n        with self._lock:\n            self._status = value\n            self._last_update = time.time()\n\n    @property\n    def mouth_correct(self) -&gt; bool:\n        \"\"\"Returns True if 60%+ of recent frames show correct mouth shape.\"\"\"\n        with self._lock:\n            if len(self._confidence_history) &lt; 3: return False\n            return sum(self._confidence_history) / len(self._confidence_history) &gt; 0.6\n\n    def update_mouth_state(self, is_correct: bool):\n        with self._lock:\n            self._confidence_history.append(1.0 if is_correct else 0.0)\n\nstate = ThreadSafeState()",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Multimodal System"
+    ]
+  },
+  {
+    "objectID": "prototypes/multimodal.html#model-manager",
+    "href": "prototypes/multimodal.html#model-manager",
+    "title": "Multimodal System",
+    "section": "Model Manager",
+    "text": "Model Manager\n\n\nCode\nimport whisper\nimport mediapipe as mp\nimport torch\nimport threading\n\nclass ModelManager:\n    \"\"\"Initializes and safely shares Whisper + MediaPipe models across threads.\"\"\"\n\n    def __init__(self):\n        self.lock = threading.Lock()\n        self._device = self._detect_device()\n        self.whisper_model = self._init_whisper()\n        self.face_mesh     = self._init_mediapipe()\n\n    def _detect_device(self) -&gt; str:\n        if torch.cuda.is_available(): return \"cuda\"\n        if hasattr(torch.backends, \"mps\") and torch.backends.mps.is_available(): return \"mps\"\n        return \"cpu\"\n\n    def _init_whisper(self):\n        try:\n            model = whisper.load_model(CONFIG.WHISPER_MODEL_SIZE, device=self._device)\n            print(f\"✅ Whisper loaded on {self._device.upper()}\")\n            return model\n        except Exception:\n            print(\"⚠️ Falling back to CPU for Whisper\")\n            self._device = \"cpu\"\n            return whisper.load_model(CONFIG.WHISPER_MODEL_SIZE, device=\"cpu\")\n\n    def _init_mediapipe(self):\n        mp_face_mesh = mp.solutions.face_mesh\n        # refine_landmarks=False disables iris tracking — major speedup\n        return mp_face_mesh.FaceMesh(\n            max_num_faces=CONFIG.MAX_FACES,\n            refine_landmarks=False,\n            min_detection_confidence=CONFIG.MIN_DETECTION_CONFIDENCE,\n            min_tracking_confidence=CONFIG.MIN_TRACKING_CONFIDENCE\n        )\n\n    def process_frame(self, rgb_frame):\n        with self.lock: return self.face_mesh.process(rgb_frame)\n\n    def transcribe(self, audio_path: str) -&gt; dict:\n        with self.lock:\n            return self.whisper_model.transcribe(\n                audio_path,\n                language=CONFIG.WHISPER_LANGUAGE,\n                fp16=(self._device == \"cuda\"),\n                condition_on_previous_text=False,  # Prevents hallucination\n                no_speech_threshold=0.6,\n                initial_prompt=CONFIG.TARGET_WORD  # Focus on target\n            )\n\nmodels = ModelManager()",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Multimodal System"
+    ]
+  },
+  {
+    "objectID": "prototypes/multimodal.html#mouth-geometry-engine",
+    "href": "prototypes/multimodal.html#mouth-geometry-engine",
+    "title": "Multimodal System",
+    "section": "Mouth Geometry Engine",
+    "text": "Mouth Geometry Engine\n\n\nCode\nimport math\n\nLIP_LANDMARKS = {'top': 13, 'bottom': 14, 'left': 61, 'right': 291}\n\nclass MouthAnalyzer:\n    @staticmethod\n    def extract_landmarks(face_landmarks, w: int, h: int) -&gt; dict:\n        return {\n            name: (int(face_landmarks.landmark[idx].x * w),\n                   int(face_landmarks.landmark[idx].y * h),\n                   face_landmarks.landmark[idx].z)\n            for name, idx in LIP_LANDMARKS.items()\n        }\n\n    @staticmethod\n    def calculate_geometry(landmarks: dict) -&gt; dict:\n        top, bottom = landmarks['top'], landmarks['bottom']\n        left, right = landmarks['left'], landmarks['right']\n\n        # math.hypot is faster than manual sqrt(dx**2 + dy**2)\n        v_dist = math.hypot(top[0] - bottom[0], top[1] - bottom[1])\n        h_dist = math.hypot(left[0] - right[0], left[1] - right[1])\n        ratio  = h_dist / (v_dist + 1e-6)\n\n        return {\n            'vertical':      v_dist,\n            'horizontal':    h_dist,\n            'ratio':         ratio,\n            'is_open':       v_dist &gt; CONFIG.MIN_VERTICAL_OPENING,\n            'is_proportional': ratio &gt; CONFIG.MIN_ASPECT_RATIO\n        }",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Multimodal System"
+    ]
+  },
+  {
+    "objectID": "prototypes/multimodal.html#running-the-module",
+    "href": "prototypes/multimodal.html#running-the-module",
+    "title": "Multimodal System",
+    "section": "Running the Module",
+    "text": "Running the Module\nconda activate speech_therapy\npython multimodal_prototype.py\n\n\n\n\n\n\nWarningResource Usage\n\n\n\nThe multimodal system loads both Whisper and MediaPipe into memory simultaneously.\nOn CPU-only machines, expect a 2–3 minute startup time and reduced frame rate.\nA 4 GB+ VRAM GPU is recommended for smooth real-time operation.",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Multimodal System"
+    ]
+  },
+  {
+    "objectID": "prototypes/multimodal.html#key-dependencies",
+    "href": "prototypes/multimodal.html#key-dependencies",
+    "title": "Multimodal System",
+    "section": "Key Dependencies",
+    "text": "Key Dependencies\n\n\n\nPackage\nPurpose\n\n\n\n\nopenai-whisper\nArabic ASR\n\n\nmediapipe\nFace landmark extraction\n\n\nopencv-python\nFrame capture and rendering\n\n\ntorch\nGPU inference\n\n\ngradio\nWeb interface\n\n\nthreading\nConcurrent video/audio processing\n\n\ncollections.deque\nTemporal smoothing buffer",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Multimodal System"
+    ]
+  },
+  {
+    "objectID": "prototypes/speech-module.html",
+    "href": "prototypes/speech-module.html",
+    "title": "Layla Module — Speech-to-Text Analysis",
+    "section": "",
+    "text": "The Layla Module is the acoustic analysis engine of the platform. It uses OpenAI Whisper to transcribe children’s Arabic speech in real time and performs phonological error classification — detecting specific patterns such as phoneme deletion, substitution, and fluency breakdown.\nThe module is designed around Palestinian/Levantine dialect phonology, targeting common errors in disorders like phonological deletion (e.g., dropping the initial /q/ in “قطار” → “طار”) and verbal stuttering.",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Layla — Speech-to-Text"
+    ]
+  },
+  {
+    "objectID": "prototypes/speech-module.html#overview",
+    "href": "prototypes/speech-module.html#overview",
+    "title": "Layla Module — Speech-to-Text Analysis",
+    "section": "",
+    "text": "The Layla Module is the acoustic analysis engine of the platform. It uses OpenAI Whisper to transcribe children’s Arabic speech in real time and performs phonological error classification — detecting specific patterns such as phoneme deletion, substitution, and fluency breakdown.\nThe module is designed around Palestinian/Levantine dialect phonology, targeting common errors in disorders like phonological deletion (e.g., dropping the initial /q/ in “قطار” → “طار”) and verbal stuttering.",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Layla — Speech-to-Text"
+    ]
+  },
+  {
+    "objectID": "prototypes/speech-module.html#clinical-foundation",
+    "href": "prototypes/speech-module.html#clinical-foundation",
+    "title": "Layla Module — Speech-to-Text Analysis",
+    "section": "Clinical Foundation",
+    "text": "Clinical Foundation\n\nTarget: Phonological Deletion Detection\nPhonological deletion is one of the most common error patterns in Arabic pediatric speech disorders. A child with this disorder may omit the initial consonant of a word. The module specifically models this:\n\n\n\n\n\n\n\n\n\nChild Says\nTarget Word\nError Type\nClinical Guidance\n\n\n\n\nطار\nقطار\nInitial phoneme deletion (/q/ omitted)\nPractice velar stop /q/ from the pharynx\n\n\nتتار\nقطار\nConsonant substitution\nDistinguish /q/ vs /t/ articulation\n\n\nقطار\nقطار\n✅ Correct production\nPositive reinforcement",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Layla — Speech-to-Text"
+    ]
+  },
+  {
+    "objectID": "prototypes/speech-module.html#system-architecture",
+    "href": "prototypes/speech-module.html#system-architecture",
+    "title": "Layla Module — Speech-to-Text Analysis",
+    "section": "System Architecture",
+    "text": "System Architecture\n\n\n\n\n\nflowchart LR\n    A[Child Speaks] --&gt; B[Gradio Microphone\\nInterface]\n    B --&gt; C[Whisper ASR\\nArabic Transcription]\n    C --&gt; D[Text Normalization\\nRemove Punctuation]\n    D --&gt; E{Phonological\\nAnalysis}\n    E --&gt;|Exact Match| F[✅ 100% Correct]\n    E --&gt;|Deletion Pattern| G[❌ Phoneme Deleted\\n+ Clinical Guidance]\n    E --&gt;|Other Error| H[❌ Mismatch\\n+ Target Word Shown]",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Layla — Speech-to-Text"
+    ]
+  },
+  {
+    "objectID": "prototypes/speech-module.html#full-source-code",
+    "href": "prototypes/speech-module.html#full-source-code",
+    "title": "Layla Module — Speech-to-Text Analysis",
+    "section": "Full Source Code",
+    "text": "Full Source Code\n\n\n\nCode\n\nspeech_prototype.py\n\nimport gradio as gr\nimport whisper\nimport torch\n\n# 1. Detect GPU and load model on best available device\ndevice = \"cuda\" if torch.cuda.is_available() else \"cpu\"\nprint(f\"Loading Whisper model on ({device})...\")\n\n# Base model — optimal balance between speed and Arabic phoneme accuracy\nmodel = whisper.load_model(\"base\", device=device)\nprint(\"Model loaded successfully!\")\n\n# 2. Define the target word for the current therapy session\nTARGET_WORD = \"قطار\"  # Example: \"Qitar\" (Train)\n\ndef check_arabic_speech(audio_file_path):\n    if not audio_file_path:\n        return \"⚠️ Please press the microphone and record your voice first!\"\n\n    try:\n        # 3. Run Whisper with forced Arabic language decoding\n        # language=\"ar\" prevents transliteration to Latin script\n        result = model.transcribe(audio_file_path, language=\"ar\", task=\"transcribe\")\n        transcribed_text = result[\"text\"].strip()\n\n        # 4. Normalize: remove punctuation, keep alphanumeric + spaces\n        clean_text = \"\".join(\n            c for c in transcribed_text if c.isalnum() or c.isspace()\n        ).strip()\n\n        # 5. Phonological analysis and clinical feedback\n        if clean_text == TARGET_WORD:\n            return f\"✅ Excellent! Correct pronunciation 100%!\\nSpoken word: [{clean_text}]\"\n\n        # Detect initial phoneme deletion (child says طار instead of قطار)\n        elif \"طار\" in clean_text or \"تتار\" in clean_text:\n            return (\n                f\"❌ Phonological deletion detected (initial consonant dropped)!\\n\"\n                f\"Spoken: [{clean_text}]\\n\"\n                f\"Guidance: Try producing the /q/ sound forcefully from the back of the throat.\"\n            )\n\n        else:\n            return (\n                f\"❌ Pronunciation does not match target.\\n\"\n                f\"Heard: [{clean_text}]\\n\"\n                f\"Target: [{TARGET_WORD}]\"\n            )\n\n    except Exception as e:\n        return f\"Error processing audio signal: {str(e)}\"\n\n\n# 6. Build the Gradio interactive interface\nwith gr.Blocks(title=\"Smart Speech Therapy - AI Audio Unit\") as demo:\n    gr.Markdown(\"# 🎤 Real-Time Arabic Speech Analysis (AI)\")\n    gr.Markdown(f\"### 🎯 Current Challenge: Pronounce the word **[{TARGET_WORD}]** clearly\")\n\n    with gr.Row():\n        audio_input = gr.Audio(\n            sources=[\"microphone\"],\n            type=\"filepath\",\n            label=\"Press the microphone and start speaking\"\n        )\n\n    with gr.Row():\n        check_btn = gr.Button(\"Analyze Speech 🚀\", variant=\"primary\")\n\n    with gr.Row():\n        output_result = gr.Textbox(\n            label=\"Phonological Analysis Result\",\n            lines=4\n        )\n\n    check_btn.click(fn=check_arabic_speech, inputs=audio_input, outputs=output_result)\n\n# 7. Launch with share=True for mobile microphone access\nif __name__ == \"__main__\":\n    demo.launch(share=True)",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Layla — Speech-to-Text"
+    ]
+  },
+  {
+    "objectID": "prototypes/speech-module.html#running-the-module",
+    "href": "prototypes/speech-module.html#running-the-module",
+    "title": "Layla Module — Speech-to-Text Analysis",
+    "section": "Running the Module",
+    "text": "Running the Module\nconda activate speech_therapy\npython speech_prototype.py\nOnce running, Gradio prints a local URL (and optionally a public share link):\nRunning on local URL:  http://127.0.0.1:7860\nRunning on public URL: https://xxxx.gradio.live\nOpen the URL on any device (phone or computer) and use the microphone.",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Layla — Speech-to-Text"
+    ]
+  },
+  {
+    "objectID": "prototypes/speech-module.html#whisper-model-sizes",
+    "href": "prototypes/speech-module.html#whisper-model-sizes",
+    "title": "Layla Module — Speech-to-Text Analysis",
+    "section": "Whisper Model Sizes",
+    "text": "Whisper Model Sizes\nThe module uses the base model. You can upgrade for higher accuracy at the cost of speed:\n\n\n\nModel\nParameters\nArabic Accuracy\nSpeed\n\n\n\n\ntiny\n39M\nLow\nVery Fast\n\n\nbase\n74M\nModerate\nFast (default)\n\n\nsmall\n244M\nGood\nMedium\n\n\nmedium\n769M\nHigh\nSlow\n\n\nlarge-v3\n1550M\nHighest\nVery Slow",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Layla — Speech-to-Text"
+    ]
+  },
+  {
+    "objectID": "prototypes/speech-module.html#key-dependencies",
+    "href": "prototypes/speech-module.html#key-dependencies",
+    "title": "Layla Module — Speech-to-Text Analysis",
+    "section": "Key Dependencies",
+    "text": "Key Dependencies\n\n\n\nPackage\nPurpose\n\n\n\n\nopenai-whisper\nArabic speech-to-text transcription\n\n\ntorch\nGPU acceleration\n\n\ngradio\nInteractive web UI",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Layla — Speech-to-Text"
+    ]
+  },
+  {
+    "objectID": "prototypes/tts-module.html",
+    "href": "prototypes/tts-module.html",
+    "title": "Habibi TTS — Arabic Speech Synthesis",
+    "section": "",
+    "text": "The Habibi TTS Module provides dialect-aware Arabic speech synthesis using the Habibi-TTS engine. It converts Arabic text into natural, fluent speech across five major Arabic dialects, enabling the platform to:\n\nModel correct pronunciation for the child to imitate (auditory cueing)\nGenerate personalized audio feedback in the child’s native dialect\nNarrate therapy stories produced by the Story Generator module",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Habibi TTS"
+    ]
+  },
+  {
+    "objectID": "prototypes/tts-module.html#overview",
+    "href": "prototypes/tts-module.html#overview",
+    "title": "Habibi TTS — Arabic Speech Synthesis",
+    "section": "",
+    "text": "The Habibi TTS Module provides dialect-aware Arabic speech synthesis using the Habibi-TTS engine. It converts Arabic text into natural, fluent speech across five major Arabic dialects, enabling the platform to:\n\nModel correct pronunciation for the child to imitate (auditory cueing)\nGenerate personalized audio feedback in the child’s native dialect\nNarrate therapy stories produced by the Story Generator module",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Habibi TTS"
+    ]
+  },
+  {
+    "objectID": "prototypes/tts-module.html#supported-dialects",
+    "href": "prototypes/tts-module.html#supported-dialects",
+    "title": "Habibi TTS — Arabic Speech Synthesis",
+    "section": "Supported Dialects",
+    "text": "Supported Dialects\n\n\n\nCode\nDialect\nRegion\n\n\n\n\nMSA\nModern Standard Arabic\nFormal / Pan-Arab\n\n\nLEV\nLevantine\nPalestine, Syria, Lebanon, Jordan\n\n\nEGY\nEgyptian\nEgypt\n\n\nSAU\nSaudi\nSaudi Arabia / Gulf\n\n\nUAE\nEmirati\nUAE\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nThe Levantine (LEV) dialect is the primary clinical target for this project, matching the phonological profile of Palestinian children.",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Habibi TTS"
+    ]
+  },
+  {
+    "objectID": "prototypes/tts-module.html#system-architecture",
+    "href": "prototypes/tts-module.html#system-architecture",
+    "title": "Habibi TTS — Arabic Speech Synthesis",
+    "section": "System Architecture",
+    "text": "System Architecture\n\n\n\n\n\nflowchart LR\n    A[Arabic Text Input] --&gt; B[Dialect Selector]\n    B --&gt; C[HabibiTTS Engine\\nUnified Model]\n    C --&gt; D[PyTorch Inference\\nGPU / CPU]\n    D --&gt; E[WAV Audio Output]\n    E --&gt; F[Gradio Player]",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Habibi TTS"
+    ]
+  },
+  {
+    "objectID": "prototypes/tts-module.html#full-source-code",
+    "href": "prototypes/tts-module.html#full-source-code",
+    "title": "Habibi TTS — Arabic Speech Synthesis",
+    "section": "Full Source Code",
+    "text": "Full Source Code\n\n\n\nCode\n\ntts_prototype.py\n\nimport os\nimport soundfile as sf\nimport gradio as gr\nimport torch\nfrom habibi_tts.infer.utils_infer import HabibiTTS\n\nREPO_ROOT = os.path.dirname(os.path.realpath(__file__))\ndevice = \"cuda\" if torch.cuda.is_available() else \"cpu\"\n\n# Load the unified multi-dialect TTS engine\ntts_engine = HabibiTTS(model_type=\"Unified\", device=device)\n\n\ndef generate_arabic_speech(text, dialect):\n    \"\"\"Convert Arabic text to speech using the selected dialect.\"\"\"\n    if not text.strip():\n        return None\n\n    out_path = os.path.join(REPO_ROOT, \"output.wav\")\n\n    # Run inference\n    audio, sr = tts_engine.infer(gen_text=text, dialect=dialect)\n\n    # Convert tensor to numpy array if needed\n    if isinstance(audio, torch.Tensor):\n        audio = audio.cpu().numpy()\n\n    # Save to WAV file\n    sf.write(out_path, audio, sr)\n    return out_path\n\n\n# Build the Gradio interface\nwith gr.Blocks(title=\"Habibi-TTS Arabic Speech Synthesis\") as demo:\n    gr.Markdown(\"# 🔊 Habibi-TTS — Dialect-Aware Arabic Speech\")\n    gr.Markdown(\"Enter Arabic text and select a dialect to synthesize natural speech.\")\n\n    with gr.Row():\n        text_input = gr.Textbox(\n            label=\"Arabic Text\",\n            lines=5,\n            placeholder=\"أدخل النص العربي هنا...\"\n        )\n        dialect_input = gr.Dropdown(\n            choices=[\"MSA\", \"EGY\", \"LEV\", \"SAU\", \"UAE\"],\n            value=\"LEV\",\n            label=\"Dialect\"\n        )\n\n    with gr.Row():\n        audio_output = gr.Audio(label=\"Generated Speech\", type=\"filepath\")\n\n    btn = gr.Button(\"Generate Speech 🎙️\", variant=\"primary\")\n    btn.click(generate_arabic_speech, [text_input, dialect_input], audio_output)\n\n\nif __name__ == \"__main__\":\n    demo.launch(share=True)",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Habibi TTS"
+    ]
+  },
+  {
+    "objectID": "prototypes/tts-module.html#running-the-module",
+    "href": "prototypes/tts-module.html#running-the-module",
+    "title": "Habibi TTS — Arabic Speech Synthesis",
+    "section": "Running the Module",
+    "text": "Running the Module\nconda activate speech_therapy\npython tts_prototype.py\nThen open the Gradio URL, type Arabic text, select a dialect, and click Generate Speech.",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Habibi TTS"
+    ]
+  },
+  {
+    "objectID": "prototypes/tts-module.html#usage-example",
+    "href": "prototypes/tts-module.html#usage-example",
+    "title": "Habibi TTS — Arabic Speech Synthesis",
+    "section": "Usage Example",
+    "text": "Usage Example\n\n\n\nInput Text\nDialect\nOutput\n\n\n\n\nقطار\nLEV\nAudio pronunciation of “قطار” in Levantine dialect\n\n\nمرحبا، كيف حالك؟\nEGY\nEgyptian Arabic greeting audio\n\n\nأهلاً وسهلاً\nMSA\nFormal MSA welcome phrase",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Habibi TTS"
+    ]
+  },
+  {
+    "objectID": "prototypes/tts-module.html#key-dependencies",
+    "href": "prototypes/tts-module.html#key-dependencies",
+    "title": "Habibi TTS — Arabic Speech Synthesis",
+    "section": "Key Dependencies",
+    "text": "Key Dependencies\n\n\n\nPackage\nPurpose\n\n\n\n\nhabibi_tts\nDialect-aware Arabic TTS engine\n\n\nsoundfile\nWAV audio file writing\n\n\ntorch\nGPU inference\n\n\ngradio\nWeb interface",
+    "crumbs": [
+      "Home",
+      "Prototypes",
+      "Habibi TTS"
+    ]
+  }
+]

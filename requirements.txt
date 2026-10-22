@@ -1,0 +1,67 @@
+# Communication Disorders - Python runtime requirements
+#
+# REQUIRED PYTHON: 3.11.x
+#   torch 2.8, mediapipe 0.10 and openai-whisper do not ship wheels for
+#   Python 3.14 (the current system default). Use the setup script so a
+#   Python 3.11 virtual environment is created automatically.
+#
+# NVIDIA GPU:
+#   Install CUDA wheels BEFORE this file so pip keeps them:
+#     pip install torch==2.8.0 torchaudio==2.8.0 --index-url https://download.pytorch.org/whl/cu128
+#   The setup scripts do this automatically when nvidia-smi is available.
+#   Without CUDA wheels, PyTorch falls back to CPU.
+#
+# System dependency:
+#   ffmpeg must be installed and available on PATH (used by Whisper/torchaudio).
+
+# --- Web UI ---
+gradio==5.50.0
+
+# --- Deep learning core ---
+torch==2.8.0
+torchaudio==2.8.0
+torchcodec==0.8.1
+transformers==4.57.6
+accelerate==1.12.0
+huggingface-hub==0.34.0
+numpy==1.26.4
+pydantic==2.10.6
+protobuf==4.25.9
+
+# --- Speech recognition ---
+openai-whisper==20250625
+qwen-asr==0.0.6
+
+# --- Stutter, pronunciation, and guided-reading analysis ---
+librosa>=0.10.2,<0.12
+matplotlib>=3.8,<4
+scikit-learn>=1.5,<2
+scipy>=1.11,<2
+Pillow>=10,<12
+Levenshtein>=0.25,<1
+noisereduce>=3.0,<4
+fastdtw>=0.3.4,<1
+gTTS>=2.5,<3
+
+# --- Computer vision (lip/mouth tracking) ---
+mediapipe==0.10.21
+opencv-contrib-python==4.10.0.84
+
+# --- Arabic TTS and Habibi-TTS runtime ---
+f5-tts==1.1.10
+soundfile==0.13.1
+cached-path==1.8.10
+hydra-core==1.3.7
+omegaconf==2.3.1
+tomli==2.5.0
+Unidecode==1.4.0
+click==8.5.0
+psutil==7.2.2
+spaces==0.51.3
+datasets==3.6.0
+editdistance==0.8.1
+regex==2026.9.29
+
+# --- Optional: only needed for Habibi-TTS benchmark/eval scripts ---
+# elevenlabs==2.44.0
+# omnilingual-asr

@@ -1,0 +1,256 @@
+---
+title: "Multimodal System"
+subtitle: "Combined Vision + Audio Real-Time Pipeline"
+---
+
+## Overview
+
+The **Multimodal System** is the most technically complex module in the platform. It fuses the **Lip Apraxia Vision** engine (Saif) and the **Whisper Speech-to-Text** engine (Layla) into a single, thread-safe, real-time application.
+
+The system processes two simultaneous data streams:
+1. **Video stream** — MediaPipe extracts 3D lip landmarks from the webcam at ~30 fps
+2. **Audio stream** — Whisper transcribes the child's recorded speech
+
+Both streams run on **separate threads** to prevent blocking, managed by a centralized thread-safe state object.
+
+---
+
+## Architecture
+
+```{mermaid}
+flowchart TD
+    subgraph Input
+        V[Webcam Feed] --> VT[Video Thread]
+        A[Microphone] --> AT[Audio Thread]
+    end
+
+    subgraph Models
+        VT --> MP[MediaPipe\nFace Mesh]
+        AT --> WH[Whisper ASR\nArabic]
+    end
+
+    subgraph State
+        MP --> TS[ThreadSafeState\n_lock: threading.Lock]
+        WH --> TS
+    end
+
+    subgraph Output
+        TS --> GR[Gradio Blocks\nWeb UI]
+        GR --> LPR[LPR Overlay\nVisual Feedback]
+        GR --> TXT[Phonological\nFeedback Text]
+    end
+```
+
+---
+
+## Configuration
+
+The entire system is controlled by a centralized `AppConfig` dataclass:
+
+```{python}
+#| code-fold: false
+#| eval: false
+
+from dataclasses import dataclass
+
+@dataclass
+class AppConfig:
+    TARGET_WORD: str             = "قطار"
+    WHISPER_MODEL_SIZE: str      = "base"
+    WHISPER_LANGUAGE: str        = "ar"
+
+    MAX_FACES: int               = 1
+    MIN_DETECTION_CONFIDENCE: float = 0.5
+    MIN_TRACKING_CONFIDENCE: float  = 0.5
+
+    # LPR Clinical Thresholds
+    MIN_VERTICAL_OPENING: float  = 15.0
+    MIN_ASPECT_RATIO: float      = 1.8
+    SMOOTHING_WINDOW: int        = 5     # Frames for temporal smoothing
+
+    SIMILARITY_THRESHOLD: float  = 0.8
+
+CONFIG = AppConfig()
+```
+
+---
+
+## Thread-Safe State Management
+
+```{python}
+#| code-fold: true
+#| eval: false
+
+import threading
+from collections import deque
+import time
+
+class ThreadSafeState:
+    """Prevents race conditions between the video and audio threads."""
+
+    def __init__(self):
+        self._lock = threading.Lock()
+        self._status = "Initializing..."
+        self._confidence_history = deque(maxlen=CONFIG.SMOOTHING_WINDOW)
+        self._last_update = time.time()
+        self._frame_count = 0
+        self._fps = 0.0
+
+    @property
+    def status(self) -> str:
+        with self._lock: return self._status
+
+    @status.setter
+    def status(self, value: str):
+        with self._lock:
+            self._status = value
+            self._last_update = time.time()
+
+    @property
+    def mouth_correct(self) -> bool:
+        """Returns True if 60%+ of recent frames show correct mouth shape."""
+        with self._lock:
+            if len(self._confidence_history) < 3: return False
+            return sum(self._confidence_history) / len(self._confidence_history) > 0.6
+
+    def update_mouth_state(self, is_correct: bool):
+        with self._lock:
+            self._confidence_history.append(1.0 if is_correct else 0.0)
+
+state = ThreadSafeState()
+```
+
+---
+
+## Model Manager
+
+```{python}
+#| code-fold: true
+#| eval: false
+
+import whisper
+import mediapipe as mp
+import torch
+import threading
+
+class ModelManager:
+    """Initializes and safely shares Whisper + MediaPipe models across threads."""
+
+    def __init__(self):
+        self.lock = threading.Lock()
+        self._device = self._detect_device()
+        self.whisper_model = self._init_whisper()
+        self.face_mesh     = self._init_mediapipe()
+
+    def _detect_device(self) -> str:
+        if torch.cuda.is_available(): return "cuda"
+        if hasattr(torch.backends, "mps") and torch.backends.mps.is_available(): return "mps"
+        return "cpu"
+
+    def _init_whisper(self):
+        try:
+            model = whisper.load_model(CONFIG.WHISPER_MODEL_SIZE, device=self._device)
+            print(f"✅ Whisper loaded on {self._device.upper()}")
+            return model
+        except Exception:
+            print("⚠️ Falling back to CPU for Whisper")
+            self._device = "cpu"
+            return whisper.load_model(CONFIG.WHISPER_MODEL_SIZE, device="cpu")
+
+    def _init_mediapipe(self):
+        mp_face_mesh = mp.solutions.face_mesh
+        # refine_landmarks=False disables iris tracking — major speedup
+        return mp_face_mesh.FaceMesh(
+            max_num_faces=CONFIG.MAX_FACES,
+            refine_landmarks=False,
+            min_detection_confidence=CONFIG.MIN_DETECTION_CONFIDENCE,
+            min_tracking_confidence=CONFIG.MIN_TRACKING_CONFIDENCE
+        )
+
+    def process_frame(self, rgb_frame):
+        with self.lock: return self.face_mesh.process(rgb_frame)
+
+    def transcribe(self, audio_path: str) -> dict:
+        with self.lock:
+            return self.whisper_model.transcribe(
+                audio_path,
+                language=CONFIG.WHISPER_LANGUAGE,
+                fp16=(self._device == "cuda"),
+                condition_on_previous_text=False,  # Prevents hallucination
+                no_speech_threshold=0.6,
+                initial_prompt=CONFIG.TARGET_WORD  # Focus on target
+            )
+
+models = ModelManager()
+```
+
+---
+
+## Mouth Geometry Engine
+
+```{python}
+#| code-fold: true
+#| eval: false
+
+import math
+
+LIP_LANDMARKS = {'top': 13, 'bottom': 14, 'left': 61, 'right': 291}
+
+class MouthAnalyzer:
+    @staticmethod
+    def extract_landmarks(face_landmarks, w: int, h: int) -> dict:
+        return {
+            name: (int(face_landmarks.landmark[idx].x * w),
+                   int(face_landmarks.landmark[idx].y * h),
+                   face_landmarks.landmark[idx].z)
+            for name, idx in LIP_LANDMARKS.items()
+        }
+
+    @staticmethod
+    def calculate_geometry(landmarks: dict) -> dict:
+        top, bottom = landmarks['top'], landmarks['bottom']
+        left, right = landmarks['left'], landmarks['right']
+
+        # math.hypot is faster than manual sqrt(dx**2 + dy**2)
+        v_dist = math.hypot(top[0] - bottom[0], top[1] - bottom[1])
+        h_dist = math.hypot(left[0] - right[0], left[1] - right[1])
+        ratio  = h_dist / (v_dist + 1e-6)
+
+        return {
+            'vertical':      v_dist,
+            'horizontal':    h_dist,
+            'ratio':         ratio,
+            'is_open':       v_dist > CONFIG.MIN_VERTICAL_OPENING,
+            'is_proportional': ratio > CONFIG.MIN_ASPECT_RATIO
+        }
+```
+
+---
+
+## Running the Module
+
+```bash
+conda activate speech_therapy
+python multimodal_prototype.py
+```
+
+::: {.callout-warning}
+## Resource Usage
+The multimodal system loads both **Whisper** and **MediaPipe** into memory simultaneously.  
+On CPU-only machines, expect a 2–3 minute startup time and reduced frame rate.  
+A **4 GB+ VRAM GPU** is recommended for smooth real-time operation.
+:::
+
+---
+
+## Key Dependencies
+
+| Package | Purpose |
+|---|---|
+| `openai-whisper` | Arabic ASR |
+| `mediapipe` | Face landmark extraction |
+| `opencv-python` | Frame capture and rendering |
+| `torch` | GPU inference |
+| `gradio` | Web interface |
+| `threading` | Concurrent video/audio processing |
+| `collections.deque` | Temporal smoothing buffer |

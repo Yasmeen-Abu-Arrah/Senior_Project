@@ -1,0 +1,171 @@
+---
+title: "Layla Module — Speech-to-Text Analysis"
+subtitle: "Acoustic Pipeline for Arabic Phonological and Fluency Assessment"
+---
+
+## Overview
+
+The **Layla Module** is the acoustic analysis engine of the platform. It uses **OpenAI Whisper** to transcribe children's Arabic speech in real time and performs **phonological error classification** — detecting specific patterns such as phoneme deletion, substitution, and fluency breakdown.
+
+The module is designed around Palestinian/Levantine dialect phonology, targeting common errors in disorders like **phonological deletion** (e.g., dropping the initial /q/ in "قطار" → "طار") and **verbal stuttering**.
+
+---
+
+## Clinical Foundation
+
+### Target: Phonological Deletion Detection
+
+Phonological deletion is one of the most common error patterns in Arabic pediatric speech disorders. A child with this disorder may omit the initial consonant of a word. The module specifically models this:
+
+| Child Says | Target Word | Error Type | Clinical Guidance |
+|---|---|---|---|
+| طار | قطار | Initial phoneme deletion (/q/ omitted) | Practice velar stop /q/ from the pharynx |
+| تتار | قطار | Consonant substitution | Distinguish /q/ vs /t/ articulation |
+| قطار | قطار | ✅ Correct production | Positive reinforcement |
+
+---
+
+## System Architecture
+
+```{mermaid}
+flowchart LR
+    A[Child Speaks] --> B[Gradio Microphone\nInterface]
+    B --> C[Whisper ASR\nArabic Transcription]
+    C --> D[Text Normalization\nRemove Punctuation]
+    D --> E{Phonological\nAnalysis}
+    E -->|Exact Match| F[✅ 100% Correct]
+    E -->|Deletion Pattern| G[❌ Phoneme Deleted\n+ Clinical Guidance]
+    E -->|Other Error| H[❌ Mismatch\n+ Target Word Shown]
+```
+
+---
+
+## Full Source Code
+
+```{python}
+#| code-fold: true
+#| eval: false
+#| filename: "speech_prototype.py"
+
+import gradio as gr
+import whisper
+import torch
+
+# 1. Detect GPU and load model on best available device
+device = "cuda" if torch.cuda.is_available() else "cpu"
+print(f"Loading Whisper model on ({device})...")
+
+# Base model — optimal balance between speed and Arabic phoneme accuracy
+model = whisper.load_model("base", device=device)
+print("Model loaded successfully!")
+
+# 2. Define the target word for the current therapy session
+TARGET_WORD = "قطار"  # Example: "Qitar" (Train)
+
+def check_arabic_speech(audio_file_path):
+    if not audio_file_path:
+        return "⚠️ Please press the microphone and record your voice first!"
+
+    try:
+        # 3. Run Whisper with forced Arabic language decoding
+        # language="ar" prevents transliteration to Latin script
+        result = model.transcribe(audio_file_path, language="ar", task="transcribe")
+        transcribed_text = result["text"].strip()
+
+        # 4. Normalize: remove punctuation, keep alphanumeric + spaces
+        clean_text = "".join(
+            c for c in transcribed_text if c.isalnum() or c.isspace()
+        ).strip()
+
+        # 5. Phonological analysis and clinical feedback
+        if clean_text == TARGET_WORD:
+            return f"✅ Excellent! Correct pronunciation 100%!\nSpoken word: [{clean_text}]"
+
+        # Detect initial phoneme deletion (child says طار instead of قطار)
+        elif "طار" in clean_text or "تتار" in clean_text:
+            return (
+                f"❌ Phonological deletion detected (initial consonant dropped)!\n"
+                f"Spoken: [{clean_text}]\n"
+                f"Guidance: Try producing the /q/ sound forcefully from the back of the throat."
+            )
+
+        else:
+            return (
+                f"❌ Pronunciation does not match target.\n"
+                f"Heard: [{clean_text}]\n"
+                f"Target: [{TARGET_WORD}]"
+            )
+
+    except Exception as e:
+        return f"Error processing audio signal: {str(e)}"
+
+
+# 6. Build the Gradio interactive interface
+with gr.Blocks(title="Smart Speech Therapy - AI Audio Unit") as demo:
+    gr.Markdown("# 🎤 Real-Time Arabic Speech Analysis (AI)")
+    gr.Markdown(f"### 🎯 Current Challenge: Pronounce the word **[{TARGET_WORD}]** clearly")
+
+    with gr.Row():
+        audio_input = gr.Audio(
+            sources=["microphone"],
+            type="filepath",
+            label="Press the microphone and start speaking"
+        )
+
+    with gr.Row():
+        check_btn = gr.Button("Analyze Speech 🚀", variant="primary")
+
+    with gr.Row():
+        output_result = gr.Textbox(
+            label="Phonological Analysis Result",
+            lines=4
+        )
+
+    check_btn.click(fn=check_arabic_speech, inputs=audio_input, outputs=output_result)
+
+# 7. Launch with share=True for mobile microphone access
+if __name__ == "__main__":
+    demo.launch(share=True)
+```
+
+---
+
+## Running the Module
+
+```bash
+conda activate speech_therapy
+python speech_prototype.py
+```
+
+Once running, Gradio prints a local URL (and optionally a public share link):
+
+```
+Running on local URL:  http://127.0.0.1:7860
+Running on public URL: https://xxxx.gradio.live
+```
+
+Open the URL on any device (phone or computer) and use the microphone.
+
+---
+
+## Whisper Model Sizes
+
+The module uses the `base` model. You can upgrade for higher accuracy at the cost of speed:
+
+| Model | Parameters | Arabic Accuracy | Speed |
+|---|---|---|---|
+| `tiny` | 39M | Low | Very Fast |
+| `base` | 74M | Moderate | **Fast (default)** |
+| `small` | 244M | Good | Medium |
+| `medium` | 769M | High | Slow |
+| `large-v3` | 1550M | Highest | Very Slow |
+
+---
+
+## Key Dependencies
+
+| Package | Purpose |
+|---|---|
+| `openai-whisper` | Arabic speech-to-text transcription |
+| `torch` | GPU acceleration |
+| `gradio` | Interactive web UI |
